@@ -5,10 +5,7 @@ import { Transcript } from '../entities/transcript.entity';
 import { CreateTranscriptDto } from './dto/create-transcript.dto';
 import OpenAI from 'openai';
 import * as fs from 'fs';
-import {
-  downloadYoutubeAudio,
-  splitAudioFile,
-} from 'src/common/utils/audio.utils';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class TranscriptService {
@@ -17,9 +14,10 @@ export class TranscriptService {
   constructor(
     @InjectRepository(Transcript)
     private transcriptRepository: Repository<Transcript>,
+    private configService: ConfigService,
   ) {
     this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: this.configService.getOrThrow<string>("openai.apiKey"),
     });
   }
 

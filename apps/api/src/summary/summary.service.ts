@@ -4,6 +4,7 @@ import { Repository, QueryRunner } from 'typeorm';
 import { Summary, Language } from '../entities/summary.entity';
 import OpenAI from 'openai';
 import { CreateSummaryDto } from './dto/create-summary.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class SummaryService {
@@ -12,9 +13,10 @@ export class SummaryService {
   constructor(
     @InjectRepository(Summary)
     private summaryRepository: Repository<Summary>,
+    private configService: ConfigService,
   ) {
     this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: this.configService.getOrThrow<string>("openai.apiKey"),
     });
   }
 
@@ -31,9 +33,8 @@ export class SummaryService {
     analysis: string;
   }> {
     try {
-      const prompt = `Please analyze this transcript and provide a structured summary in ${
-        language === Language.KO ? 'Korean' : 'English'
-      }. 
+      const prompt = `Please analyze this transcript and provide a structured summary in ${language === Language.KO ? 'Korean' : 'English'
+        }. 
 
       Required sections:
       - Overview: A concise summary of the main content

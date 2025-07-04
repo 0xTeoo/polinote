@@ -19,7 +19,7 @@ export class Video extends DefaultEntity {
   @Column({ type: "text", name: "description" })
   description: string;
 
-  @Column({ type: "datetime", name: "published_at" })
+  @Column({ type: "timestamptz", name: "published_at" })
   publishedAt: Date;
 
   @Column({ type: "varchar", name: "thumbnail_url", length: 255 })

@@ -5,7 +5,7 @@ import { TranscriptSegment } from "./transcript-segment";
 
 @Entity({ schema: "polinote", name: "transcripts" })
 export class Transcript extends DefaultEntity {
-  @Column({ type: "longtext", name: "content" })
+  @Column({ type: "text", name: "content" })
   content: string;
 
   @OneToOne(() => Video, (video) => video.transcript, {

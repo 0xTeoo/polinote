@@ -1,18 +1,21 @@
-import { Entity, Column, ManyToOne } from "typeorm";
+import { Entity, Column, ManyToOne, JoinColumn } from "typeorm";
 import { DefaultEntity } from "./default-entity";
 import { Transcript } from "./transcript";
 
 @Entity({ schema: "polinote", name: "transcript_segments" })
 export class TranscriptSegment extends DefaultEntity {
-  @Column({ type: "timestamp", name: "start_time" })
+  @Column({ type: "timestamptz", name: "start_time" })
   startTime: Date;
 
-  @Column({ type: "timestamp", name: "end_time" })
+  @Column({ type: "timestamptz", name: "end_time" })
   endTime: Date;
 
   @Column({ type: "text", name: "content" })
   content: string;
-  
-  @ManyToOne(() => Transcript, (transcript) => transcript.segments)
+
+  @ManyToOne(() => Transcript, (transcript) => transcript.segments, {
+    onDelete: "CASCADE",
+  })
+  @JoinColumn({ name: "transcript_id" })
   transcript: Transcript;
 }

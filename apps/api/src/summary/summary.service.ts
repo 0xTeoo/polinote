@@ -1,10 +1,10 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, QueryRunner } from 'typeorm';
-import { Summary, Language } from '../entities/summary.entity';
 import OpenAI from 'openai';
 import { CreateSummaryDto } from './dto/create-summary.dto';
 import { ConfigService } from '@nestjs/config';
+import { Language, Summary } from '@polinote/entities';
 
 @Injectable()
 export class SummaryService {
@@ -16,7 +16,7 @@ export class SummaryService {
     private configService: ConfigService,
   ) {
     this.openai = new OpenAI({
-      apiKey: this.configService.getOrThrow<string>("openai.apiKey"),
+      apiKey: this.configService.getOrThrow<string>('openai.apiKey'),
     });
   }
 
@@ -33,8 +33,9 @@ export class SummaryService {
     analysis: string;
   }> {
     try {
-      const prompt = `Please analyze this transcript and provide a structured summary in ${language === Language.KO ? 'Korean' : 'English'
-        }. 
+      const prompt = `Please analyze this transcript and provide a structured summary in ${
+        language === Language.KO ? 'Korean' : 'English'
+      }. 
 
       Required sections:
       - Overview: A concise summary of the main content
@@ -114,14 +115,16 @@ export class SummaryService {
     createDto: CreateSummaryDto,
     queryRunner?: QueryRunner,
   ): Promise<Summary> {
-    const { video_id, transcript, language } = createDto;
+    const { videoId, transcript, language } = createDto;
     const manager = queryRunner?.manager || this.summaryRepository.manager;
 
     try {
       // Check if summary already exists
       const existingSummary = await manager.findOne(Summary, {
         where: {
-          video_id,
+          video: {
+            id: videoId,
+          },
           language,
         },
       });
@@ -139,10 +142,12 @@ export class SummaryService {
       );
 
       const summary = manager.create(Summary, {
-        video_id,
+        video: {
+          id: videoId,
+        },
         language: language,
         overview: summaryContent.overview,
-        key_sections: summaryContent.key_sections,
+        keySections: summaryContent.key_sections,
         analysis: summaryContent.analysis,
       });
 

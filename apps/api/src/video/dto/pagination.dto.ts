@@ -18,13 +18,13 @@ export class PaginationDto {
 
 export class PaginationMeta {
   @Type(() => Number)
-  current_page: number;
+  currentPage: number;
 
   @Type(() => Number)
-  total_pages: number;
+  totalPages: number;
 
   @Type(() => Number)
-  items_per_page: number;
+  itemsPerPage: number;
 }
 
 export class PaginatedResponseDto<T> {

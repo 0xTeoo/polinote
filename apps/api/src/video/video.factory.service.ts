@@ -1,14 +1,13 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { DataSource, QueryRunner } from 'typeorm';
-import { Video } from '../entities/video.entity';
 import { TranscriptService } from '../transcript/transcript.service';
 import { SummaryService } from '../summary/summary.service';
-import { Language } from '../entities/summary.entity';
 import { google } from 'googleapis';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { splitAudioFile } from 'src/common/utils/audio.utils';
 import { downloadYoutubeAudio } from 'src/common/utils/audio.utils';
+import { Language, Video } from '@polinote/entities';
 
 const youtube = google.youtube('v3');
 
@@ -71,11 +70,11 @@ export class VideoFactoryService {
     queryRunner: QueryRunner;
   }): Promise<Video> {
     const video = new Video();
-    video.youtube_video_id = youtubeVideoId;
+    video.youtubeVideoId = youtubeVideoId;
     video.title = metadata.title;
     video.description = metadata.description;
-    video.published_at = metadata.published_at;
-    video.thumbnail_url = metadata.thumbnail_url;
+    video.publishedAt = metadata.published_at;
+    video.thumbnailUrl = metadata.thumbnail_url;
 
     return queryRunner.manager.save(video);
   }
@@ -101,8 +100,8 @@ export class VideoFactoryService {
     // Step 3: Create Full Transcript
     const transcript = await this.transcriptService.createOne(
       {
-        video_id: video.id,
-        audio_paths: splitedAudioPaths,
+        videoId: video.id,
+        audioPaths: splitedAudioPaths,
       },
       queryRunner,
     );
@@ -117,7 +116,7 @@ export class VideoFactoryService {
     await Promise.all([
       this.summaryService.createOne(
         {
-          video_id: video.id,
+          videoId: video.id,
           transcript: transcript.content,
           language: Language.EN,
         },
@@ -125,7 +124,7 @@ export class VideoFactoryService {
       ),
       this.summaryService.createOne(
         {
-          video_id: video.id,
+          videoId: video.id,
           transcript: transcript.content,
           language: Language.KO,
         },
@@ -142,12 +141,12 @@ export class VideoFactoryService {
     try {
       // 1. Fetch metadata
       const metadata = await this.fetchYoutubeMetadata(
-        createVideoDto.youtube_video_id,
+        createVideoDto.youtubeVideoId,
       );
 
       // 2. Create video entity
       const video = await this.createVideoEntity({
-        youtubeVideoId: createVideoDto.youtube_video_id,
+        youtubeVideoId: createVideoDto.youtubeVideoId,
         metadata,
         queryRunner,
       });
@@ -155,7 +154,7 @@ export class VideoFactoryService {
       // 3. Create transcript and summaries
       await this.createTranscriptAndSummaries({
         video,
-        youtubeVideoId: createVideoDto.youtube_video_id,
+        youtubeVideoId: createVideoDto.youtubeVideoId,
         queryRunner,
       });
 

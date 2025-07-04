@@ -1,7 +1,7 @@
-import { Language } from 'src/entities/summary.entity';
+import { Language } from '@polinote/entities';
 
 export class CreateSummaryDto {
-  video_id: number;
+  videoId: string;
   transcript: string;
   language: Language;
 }

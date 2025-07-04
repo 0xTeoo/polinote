@@ -14,6 +14,9 @@ const environments = () => ({
   openai: {
     apiKey: process.env.OPENAI_API_KEY,
   },
+  youtube: {
+    apiKey: process.env.YOUTUBE_API_KEY,
+  },
 });
 
 export const Configuration = ConfigModule.forRoot({

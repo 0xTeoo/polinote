@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TranscriptService } from './transcript.service';
-import { Transcript } from '../entities/transcript.entity';
+import { Transcript } from '@polinote/entities';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Transcript])],

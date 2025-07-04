@@ -22,7 +22,7 @@ export class VideoBatchService {
         key: process.env.YOUTUBE_API_KEY,
         part: ['snippet'],
         channelId: WHITEHOUSE_CHANNEL_ID,
-        maxResults: 10,
+        maxResults: 30,
         order: 'date',
         type: ['video'],
       });
@@ -48,7 +48,7 @@ export class VideoBatchService {
 
       // 4. Create new video
       await this.videoService.createOne({
-        youtube_video_id: latestBriefing.id.videoId,
+        youtubeVideoId: latestBriefing.id.videoId,
       });
 
       this.logger.log(

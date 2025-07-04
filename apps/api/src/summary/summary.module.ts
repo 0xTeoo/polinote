@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Summary } from '../entities/summary.entity';
 import { SummaryService } from './summary.service';
+import { Summary } from '@polinote/entities';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Summary])],

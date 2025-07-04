@@ -1,0 +1,26 @@
+{
+  "name": "@polinote/entities",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.10.0",
+  "dependencies": {
+    "pg": "^8.16.0",
+    "typeorm": "^0.3.23",
+    "uuid": "^11.0.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

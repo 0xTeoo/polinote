@@ -1,17 +1,14 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Video } from '../entities/video.entity';
 import { VideoFactoryService } from './video.factory.service';
 import {
   PaginationDto,
   PaginatedResponseDto,
   PaginationMeta,
 } from './dto/pagination.dto';
-
-interface CreateVideoDto {
-  youtube_video_id: string;
-}
+import { Video } from '@polinote/entities';
+import { CreateVideoDto } from './dto/create-video.dto';
 
 @Injectable()
 export class VideoService {
@@ -24,7 +21,7 @@ export class VideoService {
   async createOne(createVideoDto: CreateVideoDto): Promise<Video> {
     // Check if video exists
     const existingVideo = await this.videoRepository.findOne({
-      where: { youtube_video_id: createVideoDto.youtube_video_id },
+      where: { youtubeVideoId: createVideoDto.youtubeVideoId },
     });
 
     if (existingVideo) {
@@ -52,16 +49,16 @@ export class VideoService {
     const { page = 1, limit = 10 } = paginationDto;
     const skip = (page - 1) * limit;
 
-    const [items, total_items] = await this.videoRepository.findAndCount({
-      order: { created_at: 'ASC' },
+    const [items, totalItems] = await this.videoRepository.findAndCount({
+      order: { createdAt: 'ASC' },
       take: limit,
       skip: skip,
     });
 
     const meta = new PaginationMeta();
-    meta.current_page = page;
-    meta.total_pages = Math.ceil(total_items / limit);
-    meta.items_per_page = limit;
+    meta.currentPage = page;
+    meta.totalPages = Math.ceil(totalItems / limit);
+    meta.itemsPerPage = limit;
 
     const response = new PaginatedResponseDto<Video>();
     response.items = items;
@@ -70,7 +67,7 @@ export class VideoService {
     return response;
   }
 
-  async findOne(id: number): Promise<Video> {
+  async findOne(id: string): Promise<Video> {
     const video = await this.videoRepository.findOne({
       where: { id },
       relations: ['transcript', 'summaries'],
@@ -85,7 +82,7 @@ export class VideoService {
 
   async findByYoutubeId(youtubeId: string): Promise<Video> {
     const video = await this.videoRepository.findOne({
-      where: { youtube_video_id: youtubeId },
+      where: { youtubeVideoId: youtubeId },
       relations: ['transcript', 'summaries'],
     });
 

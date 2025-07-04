@@ -13,12 +13,9 @@ import {
 } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { VideoBatchService } from './video.batch.service';
-import { Video } from '../entities/video.entity';
 import { PaginationDto, PaginatedResponseDto } from './dto/pagination.dto';
-
-interface CreateVideoDto {
-  youtube_video_id: string;
-}
+import { Video } from '@polinote/entities';
+import { CreateVideoDto } from './dto/create-video.dto';
 
 @Controller('videos')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -66,7 +63,7 @@ export class VideoController {
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Video> {
-    return this.videoService.findOne(Number(id));
+    return this.videoService.findOne(id);
   }
 
   @Get('youtube/:video_id')

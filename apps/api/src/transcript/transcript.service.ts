@@ -1,11 +1,11 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, QueryRunner } from 'typeorm';
-import { Transcript } from '../entities/transcript.entity';
 import { CreateTranscriptDto } from './dto/create-transcript.dto';
 import OpenAI from 'openai';
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
+import { Transcript } from '@polinote/entities';
 
 @Injectable()
 export class TranscriptService {
@@ -17,7 +17,7 @@ export class TranscriptService {
     private configService: ConfigService,
   ) {
     this.openai = new OpenAI({
-      apiKey: this.configService.getOrThrow<string>("openai.apiKey"),
+      apiKey: this.configService.getOrThrow<string>('openai.apiKey'),
     });
   }
 
@@ -50,13 +50,13 @@ export class TranscriptService {
     createDto: CreateTranscriptDto,
     queryRunner?: QueryRunner,
   ): Promise<Transcript> {
-    const { video_id, audio_paths } = createDto;
+    const { videoId, audioPaths } = createDto;
     const manager = queryRunner?.manager || this.transcriptRepository.manager;
 
     try {
       // Check if transcript already exists
       const existingTranscript = await manager.findOne(Transcript, {
-        where: { video_id },
+        where: { video: { id: videoId } },
       });
 
       if (existingTranscript) {
@@ -66,10 +66,12 @@ export class TranscriptService {
         );
       }
 
-      const rawTranscript = await this.fetchRawTranscript(audio_paths);
+      const rawTranscript = await this.fetchRawTranscript(audioPaths);
 
       const transcript = manager.create(Transcript, {
-        video_id,
+        video: {
+          id: videoId,
+        },
         content: rawTranscript,
       });
 

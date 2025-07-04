@@ -33,9 +33,8 @@ export class SummaryService {
     analysis: string;
   }> {
     try {
-      const prompt = `Please analyze this transcript and provide a structured summary in ${
-        language === Language.KO ? 'Korean' : 'English'
-      }. 
+      const prompt = `Please analyze this transcript and provide a structured summary in ${language === Language.KO ? 'Korean' : 'English'
+        }. 
 
       Required sections:
       - Overview: A concise summary of the main content

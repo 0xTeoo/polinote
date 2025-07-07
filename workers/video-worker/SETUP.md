@@ -74,7 +74,7 @@ Each job processes a YouTube video through these steps:
 
 ## 🔄 Integration with Existing Codebase
 
-The video-worker is designed to work alongside the existing `video.factory.service.ts`:
+The video-worker is designed to work alongside the existing `video-factory.service.ts`:
 
 - **Similar functionality**: Both use `yt-dlp` for downloading and OpenAI APIs
 - **Different architecture**: Worker uses BullMQ for async processing vs direct API calls

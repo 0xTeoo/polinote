@@ -17,9 +17,6 @@ const environments = () => ({
   youtube: {
     apiKey: process.env.YOUTUBE_API_KEY,
   },
-  queue: {
-    video: process.env.VIDEO_QUEUE_NAME,
-  },
   bullmq: {
     host: process.env.BULLMQ_REDIS_HOST,
     port: parseInt(process.env.BULLMQ_REDIS_PORT || "6379", 10),

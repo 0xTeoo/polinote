@@ -13,7 +13,7 @@ const redis = new Redis({
   maxRetriesPerRequest: null,
 });
 
-const queue = new Queue(process.env.QUEUE_NAME || "video_queue", {
+const queue = new Queue("video", {
   connection: redis,
 });
 

@@ -4,6 +4,8 @@ import { transcribeAudio } from "./transcribe-audio";
 import { summarize } from "./summarize";
 import { Language } from "@polinote/entities";
 import { Storage } from "./storage";
+import { getYoutubeMetadata, YoutubeMetadata } from "./lib/youtube";
+import { extractVideoId } from "./utils/youtube";
 
 interface VideoJobData {
   youtubeUrl: string;
@@ -11,6 +13,7 @@ interface VideoJobData {
 
 interface JobResult {
   videoId: string;
+  metadata: YoutubeMetadata;
   audioPath: string;
   rawTranscript: string;
   transcriptSegments: Array<{
@@ -31,6 +34,7 @@ interface JobResult {
 
 export async function jobHandler(job: Job<VideoJobData>): Promise<JobResult> {
   const { youtubeUrl } = job.data;
+  const videoId = extractVideoId(youtubeUrl);
 
   console.log(`Processing job ${job.id} for URL: ${youtubeUrl}`);
 
@@ -38,9 +42,23 @@ export async function jobHandler(job: Job<VideoJobData>): Promise<JobResult> {
     // Initialize storage
     const storage = new Storage();
 
-    // Step 1: Download audio
+    // Step 0: Fetch YouTube metadata
+    console.log("Step 0: Fetching YouTube metadata...");
+    const metadata = await getYoutubeMetadata(videoId);
+
+    // Step 1: Download audio and split it into 2 parts
+    // - 1450 seconds is the maximum duration for the audio to be transcribed using whisper
     console.log("Step 1: Downloading audio...");
-    const { audioPath, videoId } = await downloadAudio(youtubeUrl);
+    const { audioPath } = await downloadAudio({
+      youtubeUrl,
+      videoId,
+      splitConfig: {
+        splits: [
+          { start: 0, duration: 1450 },
+          { start: 1450 },
+        ]
+      }
+    });
 
     // Step 2: Transcribe audio
     console.log("Step 2: Transcribing audio...");
@@ -57,6 +75,7 @@ export async function jobHandler(job: Job<VideoJobData>): Promise<JobResult> {
 
     const result: JobResult = {
       videoId,
+      metadata,
       audioPath,
       rawTranscript,
       transcriptSegments,

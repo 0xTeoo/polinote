@@ -43,7 +43,6 @@ REDIS_DB=0
 
 # Worker Configuration
 WORKER_CONCURRENCY=1
-QUEUE_NAME=video_queue
 
 # File Storage
 DOWNLOADS_DIR=./downloads
@@ -110,7 +109,7 @@ docker run --env-file .env video-worker
 
 ## Queue Management
 
-The worker listens to the `video_queue` (configurable via `QUEUE_NAME` env var) and processes jobs with the following configuration:
+The worker listens to the `video` and processes jobs with the following configuration:
 
 - **Concurrency**: Configurable via `WORKER_CONCURRENCY` (default: 1)
 - **Retries**: 3 attempts with exponential backoff

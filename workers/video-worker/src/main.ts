@@ -2,7 +2,7 @@ import { Worker } from "bullmq";
 import { jobHandler } from "./job-handler";
 import { redis } from "./config";
 
-const worker = new Worker(process.env.QUEUE_NAME || "video_queue", jobHandler, {
+const worker = new Worker("video", jobHandler, {
   connection: redis,
   concurrency: parseInt(process.env.WORKER_CONCURRENCY || "1"),
 });

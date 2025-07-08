@@ -52,7 +52,6 @@ export class Storage {
     videoId: string,
     result: {
       videoId: string;
-      audioPath: string;
       rawTranscript: string;
       transcriptSegments: Array<{
         start: number;

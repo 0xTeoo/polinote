@@ -14,7 +14,7 @@ interface TranscriptionResult {
  * Transcribe audio file using OpenAI Whisper API
  */
 export async function transcribeAudio(
-  audioPath: string
+  audioPaths: string[]
 ): Promise<TranscriptionResult> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
@@ -26,45 +26,32 @@ export async function transcribeAudio(
   });
 
   try {
-    console.log(`Transcribing audio file: ${audioPath}`);
-
-    // Verify file exists
-    if (!fs.existsSync(audioPath)) {
-      throw new Error(`Audio file not found: ${audioPath}`);
-    }
-
-    // Create file stream
-    const audioFile = fs.createReadStream(audioPath);
-
-    // Transcribe with timestamps
-    const transcription = await openai.audio.transcriptions.create({
-      file: audioFile,
-      model: "whisper-1",
-      response_format: "verbose_json",
-      timestamp_granularities: ["segment"],
-    });
-
-    // Extract full transcript
-    const rawTranscript = transcription.text || "";
-
-    // Extract timestamped segments
-    const transcriptSegments =
-      transcription.segments?.map((segment) => ({
-        start: segment.start,
-        end: segment.end,
-        text: segment.text,
-      })) || [];
-
-    console.log(
-      `Transcription completed. Length: ${rawTranscript.length} characters`
+    const transcriptions = await Promise.all(
+      audioPaths.map(async (path) => {
+        const transcription = await openai.audio.transcriptions.create({
+          file: fs.createReadStream(path),
+          model: "whisper-1",
+          response_format: "verbose_json",
+          timestamp_granularities: ["segment"],
+        });
+        return transcription;
+      })
     );
 
+    const fullTranscription = transcriptions.map((transcription) => transcription.text).join("\n");
+    const fullTranscriptSegments = transcriptions.map((transcription) => transcription.segments).flat().map((segment) => ({
+      start: segment?.start || 0,
+      end: segment?.end || 0,
+      text: segment?.text || "",
+    }));
+
     return {
-      rawTranscript,
-      transcriptSegments,
+      rawTranscript: fullTranscription,
+      transcriptSegments: fullTranscriptSegments,
     };
+
   } catch (error) {
     console.error(`Failed to transcribe audio: ${error}`);
-    throw new Error(`Failed to transcribe audio file ${audioPath}: ${error}`);
+    throw new Error(`Failed to transcribe audio file ${audioPaths.join(", ")}: ${error}`);
   }
 }

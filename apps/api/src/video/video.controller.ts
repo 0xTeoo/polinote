@@ -10,6 +10,7 @@ import {
   Query,
   UseInterceptors,
   ClassSerializerInterceptor,
+  Delete,
 } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { VideoBatchService } from './video-batch.service';
@@ -27,6 +28,23 @@ export class VideoController {
     private readonly videoBatchService: VideoBatchService,
     private readonly videoQueueService: VideoQueueService,
   ) { }
+
+  @Get()
+  async findPaginated(
+    @Query() paginationDto: PaginationDto,
+  ): Promise<PaginatedResponseDto<Video>> {
+    return this.videoService.findPaginated(paginationDto);
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<Video> {
+    return this.videoService.findOne(id);
+  }
+
+  @Get('youtube/:video_id')
+  async findByYoutubeId(@Param('video_id') videoId: string): Promise<Video> {
+    return this.videoService.findByYoutubeId(videoId);
+  }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -95,6 +113,21 @@ export class VideoController {
     }
   }
 
+
+  @Post('crawl-latest')
+  @HttpCode(HttpStatus.OK)
+  async crawlLatest() {
+    try {
+      await this.videoBatchService.crawlLatestBriefingVideoManually();
+      return { message: 'Crawling process completed' };
+    } catch (error) {
+      throw new HttpException(
+        `Failed to crawl latest briefing video: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   @Get('job/:jobId/status')
   async getJobStatus(@Param('jobId') jobId: string): Promise<VideoJobStatusDto> {
     try {
@@ -143,35 +176,9 @@ export class VideoController {
     }
   }
 
-
-  @Post('crawl-latest')
-  @HttpCode(HttpStatus.OK)
-  async crawlLatest() {
-    try {
-      await this.videoBatchService.crawlLatestBriefingVideoManually();
-      return { message: 'Crawling process completed' };
-    } catch (error) {
-      throw new HttpException(
-        `Failed to crawl latest briefing video: ${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  @Get()
-  async findPaginated(
-    @Query() paginationDto: PaginationDto,
-  ): Promise<PaginatedResponseDto<Video>> {
-    return this.videoService.findPaginated(paginationDto);
-  }
-
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Video> {
-    return this.videoService.findOne(id);
-  }
-
-  @Get('youtube/:video_id')
-  async findByYoutubeId(@Param('video_id') videoId: string): Promise<Video> {
-    return this.videoService.findByYoutubeId(videoId);
+  @Delete('job/:jobId')
+  async removeJob(@Param('jobId') jobId: string) {
+    await this.videoQueueService.removeJob(jobId);
+    return { message: `Job ${jobId} removed` };
   }
 }

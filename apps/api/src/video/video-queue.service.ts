@@ -90,6 +90,10 @@ export class VideoQueueService implements OnModuleDestroy {
     return job.returnvalue;
   }
 
+  async removeJob(jobId: string) {
+    await this.videoQueue.remove(jobId);
+  }
+
   async onModuleDestroy() {
     await this.videoQueue.close();
   }

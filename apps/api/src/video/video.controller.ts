@@ -76,7 +76,7 @@ export class VideoController {
       }
 
       // Add job to queue
-      const jobResult = await this.videoQueueService.addVideoJob(
+      const jobResult = await this.videoQueueService.addJob(
         processVideoDto.youtubeUrl,
       );
 

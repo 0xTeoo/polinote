@@ -32,7 +32,7 @@ export class VideoQueueService implements OnModuleDestroy {
     @InjectQueue('video') private readonly videoQueue: Queue<VideoJobData, VideoJobResult>
   ) { }
 
-  async addVideoJob(youtubeUrl: string) {
+  async addJob(youtubeUrl: string) {
     const job = await this.videoQueue.add(
       'process-video',
       { youtubeUrl },

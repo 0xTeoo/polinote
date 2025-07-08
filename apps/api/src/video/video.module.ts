@@ -10,6 +10,7 @@ import { SummaryModule } from 'src/summary/summary.module';
 import { Video } from '@polinote/entities';
 import { VideoQueueService } from './video-queue.service';
 import { BullModule } from '@nestjs/bullmq';
+import { VideoQueueEventListner } from './video-queue.listener';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { BullModule } from '@nestjs/bullmq';
     })
   ],
   controllers: [VideoController],
-  providers: [VideoService, VideoBatchService, VideoFactoryService, VideoQueueService],
+  providers: [VideoService, VideoBatchService, VideoFactoryService, VideoQueueService, VideoQueueEventListner],
   exports: [VideoService, VideoQueueService],
 })
 export class VideoModule { }

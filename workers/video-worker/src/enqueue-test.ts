@@ -1,75 +1,63 @@
-import { Queue } from "bullmq";
-import { Redis } from "ioredis";
-import { config } from "dotenv";
+// Example of how to use the new OOP structure
+import { VideoProcessorChain } from './core/processor-chain';
+import { AudioProcessor, MediaToolsClient, Storage } from './index';
+import { VideoJobData } from './types';
 
-// Load environment variables
-config();
+// Example 1: Using the full processor chain
+async function processVideoExample() {
+  const processor = new VideoProcessorChain();
 
-const redis = new Redis({
-  host: process.env.REDIS_HOST || "localhost",
-  port: parseInt(process.env.REDIS_PORT || "6379"),
-  password: process.env.REDIS_PASSWORD || undefined,
-  db: parseInt(process.env.REDIS_DB || "0"),
-  maxRetriesPerRequest: null,
-});
+  const jobData: VideoJobData = {
+    youtubeUrl: 'https://www.youtube.com/watch?v=example'
+  };
 
-const queue = new Queue("video", {
-  connection: redis,
-});
-
-async function enqueueTestJob() {
   try {
-    // Test YouTube URL (replace with your test URL)
-    const testUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-
-    console.log(`Enqueueing test job for URL: ${testUrl}`);
-
-    const job = await queue.add(
-      "process-video",
-      {
-        youtubeUrl: testUrl,
-      },
-      {
-        attempts: 3,
-        backoff: {
-          type: "exponential",
-          delay: 2000,
-        },
-      }
-    );
-
-    console.log(`Job enqueued successfully with ID: ${job.id}`);
-    console.log(`Job data:`, job.data);
-
-    // Wait a moment to see if the job gets processed
-    setTimeout(async () => {
-      const jobStatus = await job.getState();
-      console.log(`Job status: ${jobStatus}`);
-
-      if (jobStatus === "completed") {
-        const result = await job.returnvalue;
-        console.log("Job result:", result);
-      }
-
-      await queue.close();
-      await redis.quit();
-      process.exit(0);
-    }, 5000);
+    const result = await processor.process(jobData, 'test-job-id');
+    console.log('Processing completed:', result);
   } catch (error) {
-    console.error("Failed to enqueue job:", error);
-    await queue.close();
-    await redis.quit();
-    process.exit(1);
+    console.error('Processing failed:', error);
   }
 }
 
-// Handle graceful shutdown
-process.on("SIGINT", async () => {
-  console.log("SIGINT received, shutting down...");
-  await queue.close();
-  await redis.quit();
-  process.exit(0);
-});
+// Example 2: Using individual processors
+async function processAudioOnlyExample() {
+  const audioProcessor = new AudioProcessor(new MediaToolsClient(), new Storage());
 
-// Run the test
-enqueueTestJob();
+  try {
+    const result = await audioProcessor.process({
+      youtubeUrl: 'https://www.youtube.com/watch?v=example',
+      videoId: 'example'
+    }, 'test-job-id');
+
+    console.log('Audio processing completed:', result);
+  } catch (error) {
+    console.error('Audio processing failed:', error);
+  }
+}
+
+// Example 3: Creating a custom processor
+import { BaseProcessor } from './core/base-processor';
+
+interface CustomInput {
+  data: string;
+}
+
+interface CustomOutput {
+  processedData: string;
+}
+
+class CustomProcessor extends BaseProcessor<CustomInput, CustomOutput> {
+  async process(input: CustomInput, jobId: string): Promise<CustomOutput> {
+    this.log('Processing custom data', jobId);
+
+    // Your custom logic here
+    const processedData = input.data.toUpperCase();
+
+    this.logSuccess('Custom processing completed', jobId);
+
+    return { processedData };
+  }
+}
+
+// Export for testing
+export { processVideoExample, processAudioOnlyExample, CustomProcessor }; 

@@ -1,9 +1,8 @@
 import * as fs from "fs";
 import * as path from "path";
-
-interface StorageConfig {
-  baseDir: string;
-}
+import { StorageConfig, VideoInfo, FileStatus, JobResult } from "./types";
+import { STORAGE_CONSTANTS } from "./constants";
+import { Logger } from "./utils/logger";
 
 /**
  * Storage utility for saving video processing results
@@ -11,7 +10,7 @@ interface StorageConfig {
 export class Storage {
   private config: StorageConfig;
 
-  constructor(baseDir: string = "./data") {
+  constructor(baseDir: string = STORAGE_CONSTANTS.DEFAULT_BASE_DIR) {
     this.config = {
       baseDir,
     };
@@ -22,7 +21,7 @@ export class Storage {
   private ensureDirectories(): void {
     if (!fs.existsSync(this.config.baseDir)) {
       fs.mkdirSync(this.config.baseDir, { recursive: true });
-      console.log(`Created directory: ${this.config.baseDir}`);
+      Logger.info(`Created directory: ${this.config.baseDir}`);
     }
   }
 
@@ -40,7 +39,7 @@ export class Storage {
     const videoDir = this.getVideoDir(videoId);
     if (!fs.existsSync(videoDir)) {
       fs.mkdirSync(videoDir, { recursive: true });
-      console.log(`Created video directory: ${videoDir}`);
+      Logger.info(`Created video directory: ${videoDir}`);
     }
     return videoDir;
   }
@@ -48,32 +47,12 @@ export class Storage {
   /**
    * Save complete job results to result.json
    */
-  async saveJobResults(
-    videoId: string,
-    result: {
-      videoId: string;
-      rawTranscript: string;
-      transcriptSegments: Array<{
-        start: number;
-        end: number;
-        text: string;
-      }>;
-      summaries: Array<{
-        overview: string;
-        keySections: {
-          introduction: string;
-          mainPoints: string[];
-          conclusion: string;
-        };
-        analysis: string;
-      }>;
-    }
-  ): Promise<string> {
+  async saveJobResults(videoId: string, result: JobResult): Promise<string> {
     const videoDir = this.ensureVideoDir(videoId);
-    const filepath = path.join(videoDir, "result.json");
+    const filepath = path.join(videoDir, STORAGE_CONSTANTS.RESULT_FILENAME);
 
     await fs.promises.writeFile(filepath, JSON.stringify(result, null, 2), "utf-8");
-    console.log(`Job results saved: ${filepath}`);
+    Logger.info(`Job results saved: ${filepath}`);
     return filepath;
   }
 
@@ -95,7 +74,7 @@ export class Storage {
    * Get audio file path for a video
    */
   getAudioPath(videoId: string): string {
-    return path.join(this.getVideoDir(videoId), "audio.mp3");
+    return path.join(this.getVideoDir(videoId), STORAGE_CONSTANTS.AUDIO_FILENAME);
   }
 
   /**
@@ -114,7 +93,7 @@ export class Storage {
 
     if (fs.existsSync(oldPath)) {
       await fs.promises.rename(oldPath, newPath);
-      console.log(`Audio file moved to: ${newPath}`);
+      Logger.info(`Audio file moved to: ${newPath}`);
       return newPath;
     } else {
       throw new Error(`Audio file not found at: ${oldPath}`);
@@ -124,13 +103,10 @@ export class Storage {
   /**
    * Check if files exist for a video
    */
-  hasFiles(videoId: string): {
-    audio: boolean;
-    result: boolean;
-  } {
+  hasFiles(videoId: string): FileStatus {
     const videoDir = this.getVideoDir(videoId);
-    const audioPath = path.join(videoDir, "audio.mp3");
-    const resultPath = path.join(videoDir, "result.json");
+    const audioPath = path.join(videoDir, STORAGE_CONSTANTS.AUDIO_FILENAME);
+    const resultPath = path.join(videoDir, STORAGE_CONSTANTS.RESULT_FILENAME);
 
     return {
       audio: fs.existsSync(audioPath),
@@ -156,11 +132,7 @@ export class Storage {
   /**
    * Get video directory info
    */
-  getVideoInfo(videoId: string): {
-    exists: boolean;
-    path: string;
-    files: string[];
-  } {
+  getVideoInfo(videoId: string): VideoInfo {
     const videoDir = this.getVideoDir(videoId);
     const exists = fs.existsSync(videoDir);
 

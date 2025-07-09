@@ -1,36 +1,38 @@
 import { Worker } from "bullmq";
 import { jobHandler } from "./job-handler";
 import { redis } from "./config";
+import { QUEUE_CONSTANTS } from "./constants";
+import { Logger } from "./utils/logger";
 
-const worker = new Worker("video", jobHandler, {
+const worker = new Worker(QUEUE_CONSTANTS.QUEUE_NAME, jobHandler, {
   connection: redis,
-  concurrency: parseInt(process.env.WORKER_CONCURRENCY || "1"),
+  concurrency: parseInt(process.env.WORKER_CONCURRENCY || QUEUE_CONSTANTS.DEFAULT_CONCURRENCY.toString()),
 });
 
 worker.on("completed", (job) => {
-  console.log(`Job ${job.id} completed successfully`);
+  Logger.success(`Job ${job.id} completed successfully`);
 });
 
 worker.on("failed", (job, err) => {
-  console.error(`Job ${job?.id} failed:`, err);
+  Logger.error(`Job ${job?.id} failed`, err);
 });
 
 worker.on("error", (err) => {
-  console.error("Worker error:", err);
+  Logger.error("Worker error", err);
 });
 
-console.log("Video worker started. Waiting for jobs...");
+Logger.info("Video worker started. Waiting for jobs...");
 
 // Graceful shutdown
 process.on("SIGTERM", async () => {
-  console.log("SIGTERM received, shutting down gracefully...");
+  Logger.info("SIGTERM received, shutting down gracefully...");
   await worker.close();
   await redis.quit();
   process.exit(0);
 });
 
 process.on("SIGINT", async () => {
-  console.log("SIGINT received, shutting down gracefully...");
+  Logger.info("SIGINT received, shutting down gracefully...");
   await worker.close();
   await redis.quit();
   process.exit(0);

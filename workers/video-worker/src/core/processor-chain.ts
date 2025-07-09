@@ -15,6 +15,7 @@ export class VideoProcessorChain {
   private summarizeProcessor: SummarizeProcessor;
   private storageProcessor: StorageProcessor;
   private youtubeClient: YouTubeClient;
+  private storage: Storage;
 
   constructor() {
     const mediaToolsClient = new MediaToolsClient();
@@ -26,15 +27,21 @@ export class VideoProcessorChain {
     this.summarizeProcessor = new SummarizeProcessor(openaiClient);
     this.storageProcessor = new StorageProcessor(storage);
     this.youtubeClient = new YouTubeClient();
+    this.storage = storage;
   }
 
   async process(jobData: VideoJobData, jobId: string): Promise<JobResult> {
     Logger.info('Starting video processing chain', jobId);
-    
+
     try {
       // Extract video ID
       const videoId = this.youtubeClient.extractVideoId(jobData.youtubeUrl);
-      
+
+      // If audio is already processed, return the results
+      if (this.storage.hasAudio(videoId)) {
+        return this.storage.readJobResults(videoId);
+      }
+
       // Step 1: Audio Processing
       Logger.step(1, 'Audio Processing', jobId);
       const audioOutput = await this.audioProcessor.process(

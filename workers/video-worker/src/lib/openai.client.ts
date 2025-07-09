@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import { Language } from "@polinote/entities";
 import { TranscriptSegment, Summary } from '../types';
 import { Logger } from '../utils/logger';
+import * as fs from 'fs';
 
 export class OpenAIClient {
   private openai: OpenAI;
@@ -25,8 +26,10 @@ export class OpenAIClient {
       let timeOffset = 0;
 
       for (const audioPath of audioPaths) {
+        const file = fs.createReadStream(audioPath);
+        
         const response = await this.openai.audio.transcriptions.create({
-          file: audioPath as any, // Type assertion for file path
+          file,
           model: "whisper-1",
           response_format: "verbose_json",
           timestamp_granularities: ["segment"],

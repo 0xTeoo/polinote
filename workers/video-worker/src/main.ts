@@ -6,7 +6,11 @@ import { Logger } from "./utils/logger";
 
 const worker = new Worker(QUEUE_CONSTANTS.QUEUE_NAME, jobHandler, {
   connection: redis,
-  concurrency: parseInt(process.env.WORKER_CONCURRENCY || QUEUE_CONSTANTS.DEFAULT_CONCURRENCY.toString()),
+  concurrency: 1,
+  skipStalledCheck: false,
+  skipLockRenewal: false,
+  lockDuration: 15 * 60 * 1000, // 15 minutes
+  stalledInterval: 1 * 60 * 1000, // 1 minute
 });
 
 worker.on("completed", (job) => {

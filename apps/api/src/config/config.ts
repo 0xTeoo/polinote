@@ -17,6 +17,10 @@ const environments = () => ({
   youtube: {
     apiKey: process.env.YOUTUBE_API_KEY,
   },
+  bullmq: {
+    host: process.env.BULLMQ_REDIS_HOST,
+    port: parseInt(process.env.BULLMQ_REDIS_PORT || "6379", 10),
+  }
 });
 
 export const Configuration = ConfigModule.forRoot({

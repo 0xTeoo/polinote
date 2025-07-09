@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { VideoFactoryService } from './video.factory.service';
+import { VideoFactoryService } from './video-factory.service';
 import {
   PaginationDto,
   PaginatedResponseDto,

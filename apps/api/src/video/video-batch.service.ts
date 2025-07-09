@@ -10,7 +10,7 @@ const WHITEHOUSE_CHANNEL_ID = 'UCYxRlFDqcWM4y7FfpiAN3KQ'; // @WhiteHouse channel
 export class VideoBatchService {
   private readonly logger = new Logger(VideoBatchService.name);
 
-  constructor(private readonly videoService: VideoService) {}
+  constructor(private readonly videoService: VideoService) { }
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async crawlLatestBriefingVideo() {
@@ -37,16 +37,7 @@ export class VideoBatchService {
         return;
       }
 
-      // 3. Check if video already exists
-      try {
-        await this.videoService.findByYoutubeId(latestBriefing.id.videoId);
-        this.logger.log('Video already exists, skipping...');
-        return;
-      } catch (error) {
-        // Video not found, proceed with creation
-      }
-
-      // 4. Create new video
+      // 3. Create new video
       await this.videoService.createOne({
         youtubeVideoId: latestBriefing.id.videoId,
       });

@@ -67,6 +67,19 @@ export class OpenAIClient {
   }
 
   /**
+   * Clean OpenAI response content by removing markdown code blocks
+   */
+  private cleanResponseContent(content: string): string {
+    // Remove markdown code blocks (```json ... ```)
+    let cleaned = content.replace(/```json\s*/g, '').replace(/```\s*$/g, '');
+    
+    // Also remove any leading/trailing whitespace
+    cleaned = cleaned.trim();
+    
+    return cleaned;
+  }
+
+  /**
    * Generate summary using OpenAI
    */
   async summarize(text: string, language: Language): Promise<Summary> {
@@ -74,7 +87,7 @@ export class OpenAIClient {
       const languageName = language === Language.KO ? 'Korean' : 'English';
       
       const response = await this.openai.chat.completions.create({
-        model: "gpt-4",
+        model: "gpt-4o",
         messages: [
           {
             role: "system",
@@ -108,7 +121,10 @@ export class OpenAIClient {
         throw new Error('No response from OpenAI');
       }
 
-      return JSON.parse(content);
+      // Clean the response content before parsing
+      const cleanedContent = this.cleanResponseContent(content);
+      
+      return JSON.parse(cleanedContent);
     } catch (error) {
       Logger.error('Error generating summary', error as Error);
       throw error;

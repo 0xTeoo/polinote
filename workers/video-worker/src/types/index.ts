@@ -5,8 +5,8 @@ export interface VideoJobData {
 export interface YoutubeMetadata {
   title: string;
   description: string;
-  published_at: Date;
-  thumbnail_url: string;
+  publishedAt: Date;
+  thumbnailUrl: string;
 }
 
 export interface TranscriptSegment {
@@ -59,8 +59,8 @@ export interface VideoInfo {
 }
 
 export interface FileStatus {
-  audio: boolean;
-  result: boolean;
+  hasAudio: boolean;
+  hasResult: boolean;
 }
 
 // Processor Input/Output Types

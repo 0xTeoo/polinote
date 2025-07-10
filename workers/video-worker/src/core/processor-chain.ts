@@ -37,9 +37,11 @@ export class VideoProcessorChain {
       // Extract video ID
       const videoId = this.youtubeClient.extractVideoId(jobData.youtubeUrl);
 
-      // If audio is already processed, return the results
-      if (this.storage.hasAudio(videoId)) {
-        return this.storage.readJobResults(videoId);
+      // Check if the video has already been processed
+      const { hasAudio, hasResult } = await this.storage.checkFilesExist(videoId);
+      if (hasAudio && hasResult) {
+        Logger.info('Video processing chain already completed', jobId);
+        return await this.storage.readJobResults(videoId);
       }
 
       // Step 1: Audio Processing
@@ -69,7 +71,7 @@ export class VideoProcessorChain {
 
       // Step 5: Storage
       Logger.step(5, 'Storage', jobId);
-      const result: JobResult = {
+      const jobResult: JobResult = {
         videoId,
         metadata,
         rawTranscript: transcribeOutput.rawTranscript,
@@ -77,10 +79,10 @@ export class VideoProcessorChain {
         summaries: summarizeOutput.summaries,
       };
 
-      await this.storageProcessor.process({ videoId, result }, jobId);
+      await this.storageProcessor.process({ videoId, result: jobResult }, jobId);
 
       Logger.success('Video processing chain completed successfully', jobId);
-      return result;
+      return jobResult;
     } catch (error) {
       Logger.error('Video processing chain failed', error as Error, jobId);
       throw error;

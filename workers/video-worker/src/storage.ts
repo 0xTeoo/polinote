@@ -103,14 +103,14 @@ export class Storage {
   /**
    * Check if files exist for a video
    */
-  hasFiles(videoId: string): FileStatus {
+  checkFilesExist(videoId: string): FileStatus {
     const videoDir = this.getVideoDir(videoId);
     const audioPath = path.join(videoDir, STORAGE_CONSTANTS.AUDIO_FILENAME);
     const resultPath = path.join(videoDir, STORAGE_CONSTANTS.RESULT_FILENAME);
 
     return {
-      audio: fs.existsSync(audioPath),
-      result: fs.existsSync(resultPath),
+      hasAudio: fs.existsSync(audioPath),
+      hasResult: fs.existsSync(resultPath),
     };
   }
 

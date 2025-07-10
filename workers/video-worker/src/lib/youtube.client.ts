@@ -28,8 +28,8 @@ export class YouTubeClient {
       return {
         title: snippet.title || '',
         description: snippet.description || '',
-        published_at: new Date(snippet.publishedAt || ''),
-        thumbnail_url:
+        publishedAt: new Date(snippet.publishedAt || ''),
+        thumbnailUrl:
           snippet.thumbnails?.maxres?.url ||
           snippet.thumbnails?.high?.url ||
           `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`,

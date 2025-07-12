@@ -1,5 +1,5 @@
 import { BaseProcessor } from '../core/base-processor';
-import { OpenAIClient } from '../lib/openai.client';
+import { OpenAIClient } from '../lib/openai';
 import { TranscribeInput, TranscribeOutput } from '../types';
 
 export class TranscribeProcessor extends BaseProcessor<TranscribeInput, TranscribeOutput> {

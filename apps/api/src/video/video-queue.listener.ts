@@ -5,6 +5,7 @@ import { Injectable, OnModuleInit } from "@nestjs/common";
 import { VideoService } from "./video.service";
 import { SummaryService } from "src/summary/summary.service";
 import { TranscriptService } from "src/transcript/transcript.service";
+import { TranscriptSegmentService } from "src/transcript-segment/transcript-segment.service";
 
 export interface VideoJobData {
   youtubeUrl: string;
@@ -19,6 +20,7 @@ export class VideoQueueEventListner implements OnModuleInit {
     private readonly videoService: VideoService,
     private readonly summaryService: SummaryService,
     private readonly transcriptService: TranscriptService,
+    private readonly transcriptSegmentService: TranscriptSegmentService,
   ) { }
 
   async onModuleInit() {
@@ -57,6 +59,14 @@ export class VideoQueueEventListner implements OnModuleInit {
         videoId: createdVideo.id,
         content: jobResult.rawTranscript,
       })
+
+      // Save transcript segments using the video's UUID
+      if (jobResult.transcriptSegments && jobResult.transcriptSegments.length > 0) {
+        await this.transcriptSegmentService.createMany(
+          createdVideo.id,
+          jobResult.transcriptSegments
+        );
+      }
 
       // Save summaries using the video's UUID
       await Promise.all(jobResult.summaries.map((summary) => {

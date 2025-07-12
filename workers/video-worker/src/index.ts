@@ -14,7 +14,7 @@ export { StorageProcessor } from './processors/storage-processor';
 // Clients
 export { MediaToolsClient } from './lib/media-tools.client';
 export { YouTubeClient } from './lib/youtube.client';
-export { OpenAIClient } from './lib/openai.client';
+export { OpenAIClient } from './lib/openai';
 
 // Types
 export * from './types';

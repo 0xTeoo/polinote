@@ -4,7 +4,7 @@ import { SummarizeProcessor } from '../processors/summarize-processor';
 import { StorageProcessor } from '../processors/storage-processor';
 import { YouTubeClient } from '../lib/youtube.client';
 import { MediaToolsClient } from '../lib/media-tools.client';
-import { OpenAIClient } from '../lib/openai.client';
+import { OpenAIClient } from '../lib/openai';
 import { Storage } from '../storage';
 import { VideoJobData, JobResult } from '../types';
 import { Logger } from '../utils/logger';

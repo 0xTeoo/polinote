@@ -1,7 +1,8 @@
 import OpenAI from "openai";
 import { Language } from "@polinote/entities";
-import { TranscriptSegment, Summary } from '../types';
-import { Logger } from '../utils/logger';
+import { TranscriptSegment, Summary } from '../../types';
+import { Logger } from '../../utils/logger';
+import { getLanguageConfig } from './language-config';
 import * as fs from 'fs';
 
 export class OpenAIClient {
@@ -11,6 +12,25 @@ export class OpenAIClient {
     this.openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY || "",
     });
+  }
+
+  /**
+   * Generate system prompt with guidelines
+   */
+  private generateSystemPrompt(config: any): string {
+    const guidelines = config.guidelines.map((guideline: string) => `- ${guideline}`).join('\n');
+
+    return `${config.systemPrompt}
+      Guidelines:
+      ${guidelines}
+    `;
+  }
+
+  /**
+   * Generate user prompt
+   */
+  private generateUserPrompt(config: any, text: string): string {
+    return config.userPromptTemplate.replace('{text}', text);
   }
 
   /**
@@ -27,7 +47,7 @@ export class OpenAIClient {
 
       for (const audioPath of audioPaths) {
         const file = fs.createReadStream(audioPath);
-        
+
         const response = await this.openai.audio.transcriptions.create({
           file,
           model: "whisper-1",
@@ -36,7 +56,7 @@ export class OpenAIClient {
         });
 
         const transcription = response as any;
-        
+
         if (transcription.text) {
           fullTranscript += transcription.text + ' ';
         }
@@ -72,10 +92,10 @@ export class OpenAIClient {
   private cleanResponseContent(content: string): string {
     // Remove markdown code blocks (```json ... ```)
     let cleaned = content.replace(/```json\s*/g, '').replace(/```\s*$/g, '');
-    
+
     // Also remove any leading/trailing whitespace
     cleaned = cleaned.trim();
-    
+
     return cleaned;
   }
 
@@ -84,33 +104,22 @@ export class OpenAIClient {
    */
   async summarize(text: string, language: Language): Promise<Summary> {
     try {
-      const languageName = language === Language.KO ? 'Korean' : 'English';
-      
+      const config = getLanguageConfig(language);
+      const systemPrompt = this.generateSystemPrompt(config);
+      const userPrompt = this.generateUserPrompt(config, text);
+
+      Logger.info(`Generating summary in ${config.nativeName} (${config.name})`);
+
       const response = await this.openai.chat.completions.create({
         model: "gpt-4o",
         messages: [
           {
             role: "system",
-            content: `You are a helpful assistant that creates comprehensive summaries of video transcripts in ${languageName}. 
-            Create a structured summary with the following sections:
-            1. Overview: A brief summary of the main content
-            2. Key Sections: Introduction, main points, and conclusion
-            3. Analysis: Detailed analysis and insights
-            
-            Format the response as JSON with the following structure:
-            {
-              "overview": "Brief overview",
-              "keySections": {
-                "introduction": "Introduction summary",
-                "mainPoints": ["Point 1", "Point 2", "Point 3"],
-                "conclusion": "Conclusion summary"
-              },
-              "analysis": "Detailed analysis"
-            }`
+            content: systemPrompt
           },
           {
             role: "user",
-            content: `Please summarize the following transcript in ${languageName}:\n\n${text}`
+            content: userPrompt
           }
         ],
         temperature: 0.7,
@@ -123,8 +132,12 @@ export class OpenAIClient {
 
       // Clean the response content before parsing
       const cleanedContent = this.cleanResponseContent(content);
-      
-      return JSON.parse(cleanedContent);
+      const result = JSON.parse(cleanedContent);
+
+      return {
+        language,
+        ...result,
+      };
     } catch (error) {
       Logger.error('Error generating summary', error as Error);
       throw error;

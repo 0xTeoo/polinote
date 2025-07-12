@@ -1,5 +1,6 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
+import { Language } from '@polinote/entities';
 import { Queue } from 'bullmq';
 
 export interface VideoJobData {
@@ -8,7 +9,12 @@ export interface VideoJobData {
 
 export interface VideoJobResult {
   videoId: string;
-  audioPath: string;
+  metadata: {
+    title: string;
+    description: string;
+    publishedAt: string | Date;
+    thumbnailUrl: string;
+  };
   rawTranscript: string;
   transcriptSegments: Array<{
     start: number;
@@ -16,6 +22,7 @@ export interface VideoJobResult {
     text: string;
   }>;
   summaries: Array<{
+    language: Language;
     overview: string;
     keySections: {
       introduction: string;
@@ -32,16 +39,16 @@ export class VideoQueueService implements OnModuleDestroy {
     @InjectQueue('video') private readonly videoQueue: Queue<VideoJobData, VideoJobResult>
   ) { }
 
+  async onModuleDestroy() {
+    await this.videoQueue.close();
+  }
+
   async addJob(youtubeUrl: string) {
     const job = await this.videoQueue.add(
       'process-video',
       { youtubeUrl },
       {
-        attempts: 3,
-        backoff: {
-          type: 'exponential',
-          delay: 2000,
-        },
+        attempts: 1,
         removeOnComplete: 10,
         removeOnFail: 5,
       }
@@ -92,9 +99,5 @@ export class VideoQueueService implements OnModuleDestroy {
 
   async removeJob(jobId: string) {
     await this.videoQueue.remove(jobId);
-  }
-
-  async onModuleDestroy() {
-    await this.videoQueue.close();
   }
 }

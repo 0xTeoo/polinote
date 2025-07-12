@@ -16,7 +16,11 @@ export class Summary extends DefaultEntity {
   overview: string;
 
   @Column({ type: "json", name: "key_sections", nullable: true })
-  keySections: Record<string, any>;
+  keySections: {
+    introduction: string;
+    mainPoints: string[];
+    conclusion: string;
+  };
 
   @Column({ type: "text", name: "analysis" })
   analysis: string;

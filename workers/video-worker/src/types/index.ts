@@ -1,3 +1,5 @@
+import { Language } from "@polinote/entities";
+
 export interface VideoJobData {
   youtubeUrl: string;
 }
@@ -16,6 +18,7 @@ export interface TranscriptSegment {
 }
 
 export interface Summary {
+  language: Language;
   overview: string;
   keySections: {
     introduction: string;

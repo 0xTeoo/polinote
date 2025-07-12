@@ -1,7 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { VideoFactoryService } from './video-factory.service';
 import {
   PaginationDto,
   PaginatedResponseDto,
@@ -15,8 +14,7 @@ export class VideoService {
   constructor(
     @InjectRepository(Video)
     private videoRepository: Repository<Video>,
-    private videoFactoryService: VideoFactoryService,
-  ) {}
+  ) { }
 
   async createOne(createVideoDto: CreateVideoDto): Promise<Video> {
     // Check if video exists
@@ -31,16 +29,10 @@ export class VideoService {
       );
     }
 
-    const video = await this.videoFactoryService.createVideo(createVideoDto);
-
-    if (!video) {
-      throw new HttpException(
-        'Failed to create video',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    return video;
+    // Create a new Video entity instance with proper ID generation
+    const video = this.videoRepository.create(createVideoDto);
+    const savedVideo = await this.videoRepository.save(video);
+    return savedVideo;
   }
 
   async findPaginated(

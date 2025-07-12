@@ -5,7 +5,6 @@ import { VideoController } from './video.controller';
 import { VideoService } from './video.service';
 import { VideoBatchService } from './video-batch.service';
 import { TranscriptModule } from '../transcript/transcript.module';
-import { VideoFactoryService } from './video-factory.service';
 import { SummaryModule } from 'src/summary/summary.module';
 import { Video } from '@polinote/entities';
 import { VideoQueueService } from './video-queue.service';
@@ -23,7 +22,7 @@ import { VideoQueueEventListner } from './video-queue.listener';
     })
   ],
   controllers: [VideoController],
-  providers: [VideoService, VideoBatchService, VideoFactoryService, VideoQueueService, VideoQueueEventListner],
+  providers: [VideoService, VideoBatchService, VideoQueueService, VideoQueueEventListner],
   exports: [VideoService, VideoQueueService],
 })
 export class VideoModule { }

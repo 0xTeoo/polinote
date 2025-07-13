@@ -15,11 +15,13 @@ import {
 import { VideoService } from './video.service';
 import { VideoBatchService } from './video-batch.service';
 import { PaginationQueryDTO, PaginationResponseDto } from '../common/dto/pagination.dto';
-import { Video } from '@polinote/entities';
+import { Language, Video } from '@polinote/entities';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { VideoQueueService } from './video-queue.service';
 import { ProcessVideoDto, VideoJobResponseDto, VideoJobStatusDto } from './dto/process.video.dto';
 import { VideoResponseDto } from './dto/video-response.dto';
+import { SummaryService } from '../summary/summary.service';
+import { TranscriptSegmentService } from '../transcript-segment/transcript-segment.service';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -28,6 +30,8 @@ export class VideoController {
     private readonly videoService: VideoService,
     private readonly videoBatchService: VideoBatchService,
     private readonly videoQueueService: VideoQueueService,
+    private readonly summaryService: SummaryService,
+    private readonly transcriptSegmentService: TranscriptSegmentService,
   ) { }
 
   @Get()
@@ -51,6 +55,31 @@ export class VideoController {
   @Get('youtube/:video_id')
   async findByYoutubeId(@Param('video_id') videoId: string): Promise<Video> {
     return this.videoService.findByYoutubeId(videoId);
+  }
+
+  @Get(':id/summaries')
+  async findVideoSummaries(@Param('id') id: string) {
+    const video = await this.videoService.findOne(id);
+    return video.summaries;
+  }
+
+  @Get(':id/summaries/:language')
+  async findVideoSummaryByLanguage(
+    @Param('id') id: string,
+    @Param('language') language: Language,
+  ) {
+    return this.summaryService.findByVideoIdAndLanguage(id, language);
+  }
+
+  @Get(':id/transcript-segments')
+  async findVideoTranscriptSegments(@Param('id') id: string) {
+    return this.transcriptSegmentService.findByVideoId(id);
+  }
+
+  @Get(':id/transcript')
+  async findVideoTranscript(@Param('id') id: string) {
+    const video = await this.videoService.findOne(id);
+    return video.transcript;
   }
 
   @Post()
@@ -119,7 +148,6 @@ export class VideoController {
       );
     }
   }
-
 
   @Post('crawl-latest')
   @HttpCode(HttpStatus.OK)

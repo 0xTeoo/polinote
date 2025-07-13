@@ -9,6 +9,12 @@ export class VideoResponseDto {
   id: string;
 
   @ApiProperty({
+    description: "Video youtube video id",
+    example: "123",
+  })
+  youtubeVideoId: string;
+
+  @ApiProperty({
     description: "Video title",
     example: "Video Title",
   })
@@ -47,6 +53,7 @@ export class VideoResponseDto {
   public static from(video: Video) {
     const dto = new VideoResponseDto();
     dto.id = video.id;
+    dto.youtubeVideoId = video.youtubeVideoId;
     dto.title = video.title;
     dto.description = video.description;
     dto.publishedAt = video.publishedAt;

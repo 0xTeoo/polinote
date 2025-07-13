@@ -15,7 +15,7 @@ import {
 import { VideoService } from './video.service';
 import { VideoBatchService } from './video-batch.service';
 import { PaginationQueryDTO, PaginationResponseDto } from '../common/dto/pagination.dto';
-import { Language, Video } from '@polinote/entities';
+import { Language } from '@polinote/entities';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { VideoQueueService } from './video-queue.service';
 import { ProcessVideoDto, VideoJobResponseDto, VideoJobStatusDto } from './dto/process.video.dto';

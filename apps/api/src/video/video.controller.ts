@@ -14,13 +14,14 @@ import {
 } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { VideoBatchService } from './video-batch.service';
-import { PaginationDto, PaginatedResponseDto } from './dto/pagination.dto';
+import { PaginationQueryDTO, PaginationResponseDto } from '../common/dto/pagination.dto';
 import { Video } from '@polinote/entities';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { VideoQueueService } from './video-queue.service';
 import { ProcessVideoDto, VideoJobResponseDto, VideoJobStatusDto } from './dto/process.video.dto';
+import { VideoResponseDto } from './dto/video-response.dto';
 
-@Controller('videos')
+@Controller()
 @UseInterceptors(ClassSerializerInterceptor)
 export class VideoController {
   constructor(
@@ -31,9 +32,15 @@ export class VideoController {
 
   @Get()
   async findPaginated(
-    @Query() paginationDto: PaginationDto,
-  ): Promise<PaginatedResponseDto<Video>> {
-    return this.videoService.findPaginated(paginationDto);
+    @Query() paginationQueryDto: PaginationQueryDTO,
+  ): Promise<PaginationResponseDto<VideoResponseDto>> {
+    const { items, meta } = await this.videoService.findPaginated(paginationQueryDto);
+    return PaginationResponseDto.from({
+      items: items.map(item => VideoResponseDto.from(item)),
+      totalItems: meta.totalItems,
+      page: meta.currentPage,
+      limit: meta.itemsPerPage,
+    });
   }
 
   @Get(':id')

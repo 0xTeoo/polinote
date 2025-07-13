@@ -1,11 +1,8 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  PaginationDto,
-  PaginatedResponseDto,
-  PaginationMeta,
-} from './dto/pagination.dto';
+import { PaginationQueryDTO } from '../common/dto/pagination.dto';
+import { getPaginationParams } from '../common/utils/pagination.util';
 import { Video } from '@polinote/entities';
 import { CreateVideoDto } from './dto/create-video.dto';
 
@@ -36,27 +33,24 @@ export class VideoService {
   }
 
   async findPaginated(
-    paginationDto: PaginationDto,
-  ): Promise<PaginatedResponseDto<Video>> {
-    const { page = 1, limit = 10 } = paginationDto;
-    const skip = (page - 1) * limit;
+    paginationQueryDto: PaginationQueryDTO,
+  ) {
+    const { page, limit, skip } = getPaginationParams(paginationQueryDto);
 
     const [items, totalItems] = await this.videoRepository.findAndCount({
       order: { createdAt: 'ASC' },
       take: limit,
       skip: skip,
     });
-
-    const meta = new PaginationMeta();
-    meta.currentPage = page;
-    meta.totalPages = Math.ceil(totalItems / limit);
-    meta.itemsPerPage = limit;
-
-    const response = new PaginatedResponseDto<Video>();
-    response.items = items;
-    response.meta = meta;
-
-    return response;
+    return {
+      items,
+      meta: {
+        currentPage: page,
+        totalPages: Math.ceil(totalItems / limit),
+        itemsPerPage: limit,
+        totalItems: totalItems,
+      }
+    }
   }
 
   async findOne(id: string): Promise<Video> {

@@ -2,7 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, QueryRunner } from 'typeorm';
 import { CreateSummaryDto } from './dto/create-summary.dto';
-import { Summary } from '@polinote/entities';
+import { Language, Summary } from '@polinote/entities';
 
 @Injectable()
 export class SummaryService {
@@ -40,5 +40,23 @@ export class SummaryService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  async findByVideoIdAndLanguage(videoId: string, language: Language): Promise<Summary> {
+    const summary = await this.summaryRepository.findOne({
+      where: {
+        video: { id: videoId },
+        language: language
+      },
+    });
+
+    if (!summary) {
+      throw new HttpException(
+        `Summary not found for video ${videoId} with language ${language}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return summary;
   }
 }

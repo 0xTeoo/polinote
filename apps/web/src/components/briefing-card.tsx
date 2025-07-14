@@ -5,11 +5,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { CalendarDays, ArrowRight } from "lucide-react";
-import { BriefingForList } from "@/types";
+import { VideoDTO } from "@polinote/schemas";
 import { format } from "date-fns-tz";
 
 interface BriefingCardProps {
-  briefing: BriefingForList;
+  briefing: VideoDTO;
   index: number;
 }
 
@@ -24,7 +24,7 @@ export function BriefingCard({ briefing, index }: BriefingCardProps) {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <Card className="h-full overflow-hidden flex flex-col rounded-2xl shadow-apple hover:shadow-apple-hover transition-all duration-500 ease-out border border-gray-100/50">
+        <Card className="h-full overflow-hidden flex flex-col rounded-2xl shadow-minimal hover:shadow-minimal-lg transition-all duration-500 ease-out border border-neutral-200/50 bg-white/80 backdrop-blur-sm">
           <div className="relative aspect-video overflow-hidden">
             <Image
               src={briefing.thumbnailUrl || "/placeholder.svg"}
@@ -41,28 +41,28 @@ export function BriefingCard({ briefing, index }: BriefingCardProps) {
                   isHovered ? "scale-110 bg-white" : ""
                 }`}
               >
-                <div className="w-0 h-0 border-t-8 border-t-transparent border-l-12 border-l-apple-blue border-b-8 border-b-transparent ml-1"></div>
+                <div className="w-0 h-0 border-t-8 border-t-transparent border-l-12 border-l-blue-600 border-b-8 border-b-transparent ml-1"></div>
               </div>
             </div>
           </div>
           <CardContent className="flex-grow pt-5">
-            <div className="flex items-center text-sm text-apple-gray-500 mb-2">
-              <CalendarDays className="h-4 w-4 mr-1" />
+            <div className="flex items-center text-sm text-neutral-500 mb-3">
+              <CalendarDays className="h-4 w-4 mr-2" />
               <time dateTime={briefing.publishedAt}>
                 {format(new Date(briefing.publishedAt), "MMM d, yyyy")}
               </time>
             </div>
-            <h2 className="font-semibold text-apple-gray-900 mb-2 line-clamp-2">
+            <h2 className="font-semibold text-neutral-900 mb-3 line-clamp-2 text-lg">
               {briefing.title}
             </h2>
-            <p className="text-sm text-apple-gray-600 line-clamp-2">
+            <p className="text-sm text-neutral-600 line-clamp-2 leading-relaxed">
               {briefing.description}
             </p>
           </CardContent>
           <CardFooter className="pt-0 pb-5">
             <span
               className={`text-sm font-medium flex items-center gap-1 transition-all duration-300 ease-out ${
-                isHovered ? "text-apple-blue gap-2" : "text-apple-gray-600"
+                isHovered ? "text-blue-600 gap-2" : "text-neutral-500"
               }`}
             >
               View briefing details

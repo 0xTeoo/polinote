@@ -20,7 +20,7 @@ export default async function BriefingPage({ params }: BriefingPageProps) {
   const transcriptSegments = await getTranscriptSegments(id);
 
   return (
-    <main className="min-h-screen bg-apple-gray-50">
+    <main className="min-h-screen bg-neutral-50">
       <div className="container mx-auto px-4 py-8">
         <BriefingHeader title={video.title} date={video.publishedAt} />
 

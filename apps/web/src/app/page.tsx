@@ -1,6 +1,6 @@
 import { BriefingList } from "@/components/briefing-list";
 import { PageHeader } from "@/components/page-header";
-import { getBriefings } from "./actions/get-briefings";
+import { getVideos } from "../actions/get-videos";
 
 export default async function Home({
   searchParams,
@@ -9,9 +9,9 @@ export default async function Home({
 }) {
   const { page } = await searchParams;
 
-  // const { items: briefings, meta: pagination } = await getBriefings(
-  //   parseInt(page) || 1
-  // );
+  const { items: videos, meta: pagination } = await getVideos(
+    parseInt(page) || 1
+  );
 
   return (
     <main className="min-h-screen bg-apple-gray-50">
@@ -21,7 +21,7 @@ export default async function Home({
             title="White House Press Briefings"
             description="Watch and read summaries of the latest White House press briefings"
           />
-          {/* <BriefingList briefings={briefings} pagination={pagination} /> */}
+          <BriefingList briefings={videos} pagination={pagination} />
         </div>
       </div>
     </main>

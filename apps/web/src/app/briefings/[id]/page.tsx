@@ -4,15 +4,9 @@ import { getVideo } from "@/actions/get-video";
 import { BriefingHeader } from "@/components/briefing-header";
 import { ContentColumn } from "@/components/content-column";
 import { VideoColumn } from "@/components/video-column";
-import { Language } from "@polinote/entities";
+import { Language } from "@polinote/schemas";
 
-interface BriefingPageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default async function BriefingPage({ params }: BriefingPageProps) {
+export default async function BriefingPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const video = await getVideo(id);
 

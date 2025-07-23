@@ -24,27 +24,27 @@ export function BriefingHeader({ title, date }: BriefingHeaderProps) {
         isLoaded ? "opacity-100" : "opacity-0"
       }`}
     >
-      <Link href="/" className="inline-block mb-6">
+      <Link href="/" className="inline-block mb-8">
         <Button
           variant="outline"
           size="sm"
-          className="gap-2 rounded-full border border-apple-gray-200 hover:bg-apple-gray-100 transition-all duration-300"
+          className="gap-2 rounded-full border border-neutral-200 hover:bg-neutral-50 transition-all duration-300"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to all briefings
         </Button>
       </Link>
 
-      <div className="border-b border-apple-gray-200 pb-4 mb-8">
+      <div className="border-b border-neutral-200 pb-6 mb-8">
         <h1
-          className={`text-2xl md:text-3xl font-semibold text-apple-gray-900 mb-2 transition-all duration-500 ease-out ${
+          className={`text-3xl md:text-4xl font-bold text-neutral-900 mb-3 transition-all duration-500 ease-out tracking-tight ${
             isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
           }`}
         >
           {title}
         </h1>
         <p
-          className={`text-apple-gray-500 transition-all duration-500 delay-100 ease-out ${
+          className={`text-neutral-500 text-lg transition-all duration-500 delay-100 ease-out ${
             isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
           }`}
         >

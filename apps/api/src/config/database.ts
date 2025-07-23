@@ -6,6 +6,8 @@ import {
   TranscriptSegment,
   Summary,
 } from '@polinote/entities';
+import * as path from "path";
+import * as fs from "fs";
 
 const entities = [Video, Transcript, TranscriptSegment, Summary];
 
@@ -21,5 +23,14 @@ export const PostgresDataSource = TypeOrmModule.forRootAsync({
     logging: !configService.getOrThrow<boolean>('isProduction'),
     synchronize: !configService.getOrThrow<boolean>('isProduction'),
     entities,
+    ...(configService.getOrThrow<boolean>("isProduction")
+      ? {
+        ssl: {
+          ca: fs.readFileSync(
+            path.join(process.cwd(), "ap-northeast-2-bundle.pem")
+          ),
+        },
+      }
+      : {}),
   }),
 });

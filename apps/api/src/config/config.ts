@@ -11,12 +11,6 @@ const environments = () => ({
     password: process.env.DATABASE_PASSWORD,
     name: process.env.DATABASE_NAME,
   },
-  openai: {
-    apiKey: process.env.OPENAI_API_KEY,
-  },
-  youtube: {
-    apiKey: process.env.YOUTUBE_API_KEY,
-  },
   bullmq: {
     host: process.env.BULLMQ_REDIS_HOST,
     port: parseInt(process.env.BULLMQ_REDIS_PORT || "6379", 10),

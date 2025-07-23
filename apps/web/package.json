@@ -25,7 +25,6 @@
   },
   "devDependencies": {
     "@polinote/schemas": "workspace:*",
-    "@polinote/entities": "workspace:*",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^20",

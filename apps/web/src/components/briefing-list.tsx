@@ -3,12 +3,17 @@
 import { BriefingCard } from "@/components/briefing-card";
 import { Pagination } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
-import { BriefingForList, PaginationMeta } from "@/types";
+import { VideoDTO } from "@polinote/schemas";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface BriefingListProps {
-  briefings: BriefingForList[];
-  pagination: PaginationMeta;
+  briefings: VideoDTO[];
+  pagination: {
+    totalItems: number;
+    totalPages: number;
+    currentPage: number;
+    itemsPerPage: number;
+  };
 }
 
 export function BriefingList({ briefings, pagination }: BriefingListProps) {
@@ -42,8 +47,8 @@ export function BriefingList({ briefings, pagination }: BriefingListProps) {
       </ul>
 
       {pagination.totalPages > 1 && (
-        <div className="flex items-center justify-between border-t border-gray-100 pt-6">
-          <div className="text-sm text-gray-500">
+        <div className="flex items-center justify-between border-t border-neutral-200 pt-6">
+          <div className="text-sm text-neutral-500">
             Showing {pagination.currentPage}-
             {Math.min(pagination.currentPage + 1, pagination.totalPages)} of{" "}
             {briefings.length} briefings

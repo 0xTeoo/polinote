@@ -14,7 +14,7 @@ export default async function Home({
   );
 
   return (
-    <main className="min-h-screen bg-apple-gray-50">
+    <main className="min-h-screen bg-neutral-50">
       <div className="container mx-auto px-4 py-12">
         <div className={`transition-all duration-700 ease-out`}>
           <PageHeader

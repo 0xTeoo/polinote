@@ -22,7 +22,7 @@ export function VideoPlayer({ videoId }: VideoPlayerProps) {
         </div>
         <CardContent className="p-6 bg-white">
           <h2 className="text-xl font-semibold text-neutral-900 mb-2">
-            Today's Press Briefing
+            Today&apos;s Press Briefing
           </h2>
           <p className="text-neutral-600 leading-relaxed">Loading video player...</p>
         </CardContent>
@@ -43,7 +43,7 @@ export function VideoPlayer({ videoId }: VideoPlayerProps) {
       </div>
       <CardContent className="p-6 bg-white">
         <h2 className="text-xl font-semibold text-neutral-900 mb-3">
-          Today's Press Briefing
+          Today&apos;s Press Briefing
         </h2>
         <p className="text-neutral-600 leading-relaxed">
           Watch the complete White House press briefing for the latest updates

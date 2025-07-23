@@ -1,6 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface MarkdownProps {
   content: string;
@@ -58,7 +59,7 @@ export function Markdown({ content, className }: MarkdownProps) {
               {children}
             </a>
           ),
-          img: ({ src, alt }) => <img src={src} alt={alt} className={baseStyles.img} />,
+          img: ({ src, alt }) => src && typeof src === 'string' ? <Image src={src} alt={alt || ''} className={baseStyles.img} width={100} height={100} /> : null,
           table: ({ children }) => <table className={baseStyles.table}>{children}</table>,
           th: ({ children }) => <th className={baseStyles.th}>{children}</th>,
           td: ({ children }) => <td className={baseStyles.td}>{children}</td>,

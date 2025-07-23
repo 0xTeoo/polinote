@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Play } from "lucide-react";
+import Image from "next/image";
 
 interface VideoColumnProps {
   videoId: string;
@@ -35,12 +36,13 @@ export function VideoColumn({ videoId }: VideoColumnProps) {
               ></iframe>
             ) : (
               <div className="relative w-full h-full">
-                <img
+                <Image
                   src={`https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`}
                   alt="Video thumbnail"
                   className={`w-full h-full object-cover transition-transform duration-700 ease-out ${
                     isHovered ? "scale-105" : "scale-100"
                   }`}
+                  width={100}
                 />
                 <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
                   <button
@@ -82,7 +84,7 @@ export function VideoColumn({ videoId }: VideoColumnProps) {
         </div>
         <div className="p-5 bg-white">
           <h2 className="text-lg font-semibold text-apple-gray-900">
-            Today's Press Briefing
+            Today&apos;s Press Briefing
           </h2>
           <p className="text-sm text-apple-gray-500 mt-1">
             Watch the complete White House press briefing for the latest updates

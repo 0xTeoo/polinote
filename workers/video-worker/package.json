@@ -1,6 +1,6 @@
 {
   "name": "@polinote/video-worker",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "BullMQ worker for processing YouTube videos",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",

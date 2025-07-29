@@ -12,89 +12,240 @@ export interface LanguageConfig {
 export const koreanConfig: LanguageConfig = {
   name: 'Korean',
   nativeName: '한국어',
-  systemPrompt: `당신은 한국어로 비디오 내용을 요약하는 AI 어시스턴트입니다.
+  systemPrompt: `당신은 국제정치와 경제 전문가로서 비디오 내용을 분석하는 AI 어시스턴트입니다.
 
-주어진 트랜스크립트를 바탕으로 다음과 같은 구조로 요약을 작성해주세요:
+주어진 트랜스크립트를 바탕으로 다음과 같은 전문적 분석을 제공해주세요:
 
-📋 요약 구조:
-1. 개요 - 전체 내용의 핵심을 간단히 정리
-2. 주요 섹션 - 도입부, 핵심 포인트, 마무리로 나누어 설명
-3. 분석 - 내용을 깊이 있게 분석하고 인사이트 제공
+📊 분석 구조:
+1. 요약 - 헤드라인과 개요
+2. 이해관계자 분석 - 국가, 기업, 국제기구별 입장과 이해관계
+3. 정책적 함의 - 국내외 정책에 미치는 영향 (구체적 이슈별 분석)
+4. 경제적 영향 - 시장, 무역, 투자에 미치는 영향
+5. 심층 분석 - 역사적 맥락, 시나리오, 정책/투자 제언
 
-다음 JSON 형태로 응답해주세요:
+중요: 반드시 유효한 JSON 형식으로만 응답해주세요. 다른 텍스트나 설명은 포함하지 마세요.
+응답은 오직 JSON 객체여야 하며, 마크다운 코드 블록이나 다른 형식은 사용하지 마세요.
+
+필수 JSON 구조:
 {
-  "overview": "전체 내용의 핵심 요약",
-  "keySections": {
-    "introduction": "도입부 내용 요약",
-    "mainPoints": ["주요 포인트 1", "주요 포인트 2", "주요 포인트 3"],
-    "conclusion": "마무리 및 결론"
+  "summary": {
+    "headline": "핵심 이슈를 담은 헤드라인",
+    "overview": "전체 내용의 핵심 요약"
   },
-  "analysis": "심층 분석 및 인사이트"
+  "stakeholders": [
+    {
+      "type": "country",
+      "name": "국가명",
+      "interests": "해당 주체의 이해관계와 입장"
+    },
+    {
+      "type": "organization", 
+      "name": "기관명",
+      "interests": "해당 주체의 이해관계와 입장"
+    }
+  ],
+  "policyImplications": {
+    "domestic": [
+      {
+        "issue": "국내 정책 이슈",
+        "impact": "해당 이슈의 영향"
+      }
+    ],
+    "international": [
+      {
+        "issue": "국제 정책 이슈", 
+        "impact": "해당 이슈의 영향"
+      }
+    ]
+  },
+  "economicImpact": {
+    "markets": "금융시장 영향",
+    "trade": "무역 영향",
+    "investment": "투자 환경 변화"
+  },
+  "analysis": {
+    "historicalContext": "역사적 맥락과 연관성",
+    "scenarios": ["향후 전개 시나리오 1", "시나리오 2", "시나리오 3"],
+    "recommendations": {
+      "policy": "정책적 제언",
+      "investment": "투자적 제언"
+    }
+  }
 }`,
-  userPromptTemplate: `아래 트랜스크립트를 한국어로 요약해주세요:
+  userPromptTemplate: `아래 트랜스크립트를 국제정치/경제 전문가 관점에서 분석해주세요:
 
 {text}
 
-위 내용을 한국어로 자연스럽게 요약해서 알려주세요.`,
+국제정치와 경제적 관점에서 심층 분석을 제공해주세요.`,
   jsonStructure: `{
-  "overview": "전체 내용의 핵심 요약",
-  "keySections": {
-    "introduction": "도입부 내용 요약",
-    "mainPoints": ["주요 포인트 1", "주요 포인트 2", "주요 포인트 3"],
-    "conclusion": "마무리 및 결론"
+  "summary": {
+    "headline": "핵심 이슈를 담은 헤드라인",
+    "overview": "전체 내용의 핵심 요약"
   },
-  "analysis": "심층 분석 및 인사이트"
+  "stakeholders": [
+    {
+      "type": "country|organization",
+      "name": "국가/기관명",
+      "interests": "해당 주체의 이해관계와 입장"
+    }
+  ],
+  "policyImplications": {
+    "domestic": [
+      {
+        "issue": "국내 정책 이슈",
+        "impact": "해당 이슈의 영향"
+      }
+    ],
+    "international": [
+      {
+        "issue": "국제 정책 이슈", 
+        "impact": "해당 이슈의 영향"
+      }
+    ]
+  },
+  "economicImpact": {
+    "markets": "금융시장 영향",
+    "trade": "무역 영향",
+    "investment": "투자 환경 변화"
+  },
+  "analysis": {
+    "historicalContext": "역사적 맥락과 연관성",
+    "scenarios": ["향후 전개 시나리오 1", "시나리오 2", "시나리오 3"],
+    "recommendations": {
+      "policy": "정책적 제언",
+      "investment": "투자적 제언"
+    }
+  }
 }`,
   guidelines: [
-    '모든 내용을 한국어로 작성해주세요',
-    '한국어의 자연스러운 표현과 어조를 사용해주세요',
-    '친근하면서도 정중한 톤으로 작성해주세요',
-    '한국 문화와 맥락에 맞는 분석을 제공해주세요',
-    '복잡한 내용도 쉽게 이해할 수 있도록 설명해주세요',
-    '핵심 내용을 명확하게 전달하는 데 중점을 두어주세요'
+    '국제정치와 경제 전문가의 관점에서 분석해주세요',
+    '이해관계자별 입장과 이해관계를 명확히 구분해주세요',
+    '정책적 함의는 구체적인 이슈별로 분석해주세요',
+    '경제적 영향을 시장, 무역, 투자 관점에서 분석해주세요',
+    '역사적 맥락과 향후 전개 가능성을 포함해주세요',
+    '실용적인 정책적/투자적 제언을 제공해주세요',
+    '객관적이고 균형 잡힌 시각을 유지해주세요',
+    '헤드라인은 핵심 이슈를 간결하게 요약해주세요'
   ]
 };
 
 export const englishConfig: LanguageConfig = {
   name: 'English',
   nativeName: 'English',
-  systemPrompt: `You are a helpful assistant that creates comprehensive summaries of video transcripts in English.
+  systemPrompt: `You are an expert analyst specializing in international politics and economics, providing comprehensive analysis of video content.
 
-Create a structured summary with the following sections:
+Analyze the given transcript from a geopolitical and economic perspective:
 
-1. Overview: A brief summary of the main content
-2. Key Sections: Introduction, main points, and conclusion
-3. Analysis: Detailed analysis and insights
+📊 Analysis Structure:
+1. Summary - Headline and overview
+2. Stakeholder Analysis - Countries, organizations, and their interests
+3. Policy Implications - Domestic and international policy impacts (issue-specific analysis)
+4. Economic Impact - Market, trade, and investment implications
+5. Deep Analysis - Historical context, scenarios, and policy/investment recommendations
 
-Format the response as JSON with the following structure:
+IMPORTANT: You must respond with valid JSON format only. Do not include any other text or explanations.
+Your response must be a JSON object only, do not use markdown code blocks or other formats.
+
+Required JSON structure:
 {
-  "overview": "Brief overview",
-  "keySections": {
-    "introduction": "Introduction summary",
-    "mainPoints": ["Point 1", "Point 2", "Point 3"],
-    "conclusion": "Conclusion summary"
+  "summary": {
+    "headline": "Headline capturing the core issue",
+    "overview": "Core summary of the entire content"
   },
-  "analysis": "Detailed analysis"
+  "stakeholders": [
+    {
+      "type": "country",
+      "name": "Country name",
+      "interests": "Stakeholder's interests and position"
+    },
+    {
+      "type": "organization",
+      "name": "Organization name", 
+      "interests": "Stakeholder's interests and position"
+    }
+  ],
+  "policyImplications": {
+    "domestic": [
+      {
+        "issue": "Domestic policy issue",
+        "impact": "Impact of the issue"
+      }
+    ],
+    "international": [
+      {
+        "issue": "International policy issue",
+        "impact": "Impact of the issue"
+      }
+    ]
+  },
+  "economicImpact": {
+    "markets": "Financial market implications",
+    "trade": "Trade implications",
+    "investment": "Investment environment changes"
+  },
+  "analysis": {
+    "historicalContext": "Historical context and connections",
+    "scenarios": ["Future scenario 1", "Scenario 2", "Scenario 3"],
+    "recommendations": {
+      "policy": "Policy recommendations",
+      "investment": "Investment recommendations"
+    }
+  }
 }`,
-  userPromptTemplate: `Please summarize the following transcript in English:
+  userPromptTemplate: `Please analyze the following transcript from an international politics and economics expert perspective:
 
 {text}
 
-Please provide a comprehensive summary in English.`,
+Provide a comprehensive analysis from geopolitical and economic viewpoints.`,
   jsonStructure: `{
-  "overview": "Brief overview",
-  "keySections": {
-    "introduction": "Introduction summary",
-    "mainPoints": ["Point 1", "Point 2", "Point 3"],
-    "conclusion": "Conclusion summary"
+  "summary": {
+    "headline": "Headline capturing the core issue",
+    "overview": "Core summary of the entire content"
   },
-  "analysis": "Detailed analysis"
+  "stakeholders": [
+    {
+      "type": "country|organization",
+      "name": "Country/Organization name",
+      "interests": "Stakeholder's interests and position"
+    }
+  ],
+  "policyImplications": {
+    "domestic": [
+      {
+        "issue": "Domestic policy issue",
+        "impact": "Impact of the issue"
+      }
+    ],
+    "international": [
+      {
+        "issue": "International policy issue",
+        "impact": "Impact of the issue"
+      }
+    ]
+  },
+  "economicImpact": {
+    "markets": "Financial market implications",
+    "trade": "Trade implications",
+    "investment": "Investment environment changes"
+  },
+  "analysis": {
+    "historicalContext": "Historical context and connections",
+    "scenarios": ["Future scenario 1", "Scenario 2", "Scenario 3"],
+    "recommendations": {
+      "policy": "Policy recommendations",
+      "investment": "Investment recommendations"
+    }
+  }
 }`,
   guidelines: [
-    'Write all content in English',
-    'Use clear and concise language',
-    'Provide objective analysis',
-    'Focus on key insights and takeaways'
+    'Analyze from an international politics and economics expert perspective',
+    'Clearly distinguish positions and interests of different stakeholders',
+    'Provide specific analysis of policy implications by issue',
+    'Analyze economic impacts from market, trade, and investment perspectives',
+    'Include historical context and future development possibilities',
+    'Offer practical policy and investment recommendations',
+    'Maintain objective and balanced perspective',
+    'Create headlines that concisely capture core issues'
   ]
 };
 
@@ -117,4 +268,4 @@ export function getSupportedLanguages(): Language[] {
 
 export function isLanguageSupported(language: Language): boolean {
   return languageConfigs.has(language);
-} 
+}

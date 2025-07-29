@@ -17,15 +17,41 @@ export interface TranscriptSegment {
   text: string;
 }
 
+// 새로운 Summary 인터페이스
 export interface Summary {
   language: Language;
-  overview: string;
-  keySections: {
-    introduction: string;
-    mainPoints: string[];
-    conclusion: string;
+  summary: {
+    headline: string;
+    overview: string;
   };
-  analysis: string;
+  stakeholders: Array<{
+    type: "country" | "organization";
+    name: string;
+    interests: string;
+  }>;
+  policyImplications: {
+    domestic: Array<{
+      issue: string;
+      impact: string;
+    }>;
+    international: Array<{
+      issue: string;
+      impact: string;
+    }>;
+  };
+  economicImpact: {
+    markets: string;
+    trade: string;
+    investment: string;
+  };
+  analysis: {
+    historicalContext: string;
+    scenarios: string[];
+    recommendations: {
+      policy: string;
+      investment: string;
+    };
+  };
 }
 
 export interface JobResult {

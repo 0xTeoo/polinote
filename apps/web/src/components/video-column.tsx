@@ -43,6 +43,7 @@ export function VideoColumn({ videoId }: VideoColumnProps) {
                     isHovered ? "scale-105" : "scale-100"
                   }`}
                   width={100}
+                  height={100}
                 />
                 <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
                   <button

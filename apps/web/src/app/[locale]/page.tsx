@@ -1,6 +1,6 @@
 import { BriefingList } from "@/components/briefing-list";
 import { PageHeader } from "@/components/page-header";
-import { getVideos } from "../actions/get-videos";
+import { getVideos } from "../../actions/get-videos";
 
 export default async function Home({
   searchParams,

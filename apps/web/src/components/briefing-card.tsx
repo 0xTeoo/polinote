@@ -17,7 +17,7 @@ export function BriefingCard({ briefing, index }: BriefingCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <Link href={`/briefings/${briefing.id}`} className="block h-full">
+    <Link href={`/videos/${briefing.id}`} className="block h-full">
       <div
         className={`h-full animate-fade-in`}
         style={{ animationDelay: `${index * 0.1}s` }}

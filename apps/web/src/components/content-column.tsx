@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-import { FileText, FileDigit } from "lucide-react";
+import { FileText, FileDigit, Globe, Building } from "lucide-react";
 import { Markdown } from "@/components/ui/markdown";
 import { SummaryDTO, TranscriptSegmentDTO } from "@polinote/schemas";
 
@@ -11,6 +11,7 @@ interface ContentColumnProps {
   summary: SummaryDTO;
   transcriptSegments: TranscriptSegmentDTO[];
 }
+
 export function ContentColumn({
   summary,
   transcriptSegments,
@@ -72,6 +73,23 @@ export function ContentColumn({
           <Card className="rounded-3xl shadow-minimal border border-neutral-200/50 bg-white/80 backdrop-blur-sm">
             <div className="p-8">
               <div className="max-h-[70vh] overflow-y-auto pr-6 space-y-12">
+                {/* Headline Section */}
+                <section className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-1 h-8 bg-blue-600 rounded-full"></div>
+                    <h2 className="text-2xl font-semibold text-neutral-900 tracking-tight">
+                      Headline
+                    </h2>
+                  </div>
+                  <div className="pl-5">
+                    <div className="prose prose-neutral max-w-none">
+                      <h3 className="text-xl font-semibold text-neutral-900 mb-4">
+                        {summary.headline}
+                      </h3>
+                    </div>
+                  </div>
+                </section>
+
                 {/* Overview Section */}
                 <section className="space-y-6">
                   <div className="flex items-center gap-4">
@@ -87,89 +105,232 @@ export function ContentColumn({
                   </div>
                 </section>
 
-                {/* Key Points Section */}
+                {/* Stakeholders Section */}
                 <section className="space-y-8">
                   <div className="flex items-center gap-4">
-                    <div className="w-1 h-8 bg-blue-600 rounded-full"></div>
+                    <div className="w-1 h-8 bg-green-600 rounded-full"></div>
                     <h2 className="text-2xl font-semibold text-neutral-900 tracking-tight">
-                      Key Points
+                      Key Stakeholders
                     </h2>
                   </div>
 
-                  <div className="space-y-6">
-                    {/* Introduction */}
-                    <div className="bg-neutral-50/50 rounded-2xl p-6 border border-neutral-200/50">
-                      <div className="flex items-center gap-3 mb-4">
-                        <span className="bg-blue-100 text-blue-700 font-semibold px-3 py-1 rounded-lg text-xs">
-                          01
-                        </span>
-                        <h3 className="text-xl font-semibold text-neutral-900">
-                          Introduction
-                        </h3>
-                      </div>
-                      <div className="prose prose-neutral max-w-none">
-                        <Markdown content={summary.keySections.introduction} />
-                      </div>
-                    </div>
-
-                    {/* Main Points */}
-                    <div className="bg-neutral-50/50 rounded-2xl p-6 border border-neutral-200/50">
-                      <div className="flex items-center gap-3 mb-6">
-                        <span className="bg-blue-100 text-blue-700 font-semibold px-3 py-1 rounded-lg text-xs">
-                          02
-                        </span>
-                        <h3 className="text-xl font-semibold text-neutral-900">
-                          Main Points
-                        </h3>
-                      </div>
-                      <ul className="space-y-5">
-                        {summary.keySections.mainPoints.map((point, index) => (
-                          <li
-                            key={index}
-                            className="flex items-start gap-4"
-                            style={{
-                              animationDelay: `${index * 0.1}s`,
-                            }}
+                  <div className="space-y-4">
+                    {summary.stakeholders.map((stakeholder, index) => (
+                      <div
+                        key={index}
+                        className="bg-neutral-50/50 rounded-2xl p-6 border border-neutral-200/50"
+                        style={{
+                          animationDelay: `${index * 0.1}s`,
+                        }}
+                      >
+                        <div className="flex items-center gap-3 mb-4">
+                          <div
+                            className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                              stakeholder.type === "country"
+                                ? "bg-blue-100"
+                                : "bg-purple-100"
+                            }`}
                           >
-                            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold flex-shrink-0 mt-0.5">
-                              {String.fromCharCode(65 + index)}
-                            </span>
-                            <div className="flex-1 prose prose-neutral max-w-none">
-                              <Markdown content={point} />
+                            {stakeholder.type === "country" ? (
+                              <Globe className="w-4 h-4 text-blue-600" />
+                            ) : (
+                              <Building className="w-4 h-4 text-purple-600" />
+                            )}
+                          </div>
+                          <h3 className="text-xl font-semibold text-neutral-900">
+                            {stakeholder.name}
+                          </h3>
+                          <span className="bg-neutral-200 text-neutral-700 font-semibold px-3 py-1 rounded-lg text-xs">
+                            {stakeholder.type === "country"
+                              ? "Country"
+                              : "Organization"}
+                          </span>
+                        </div>
+                        <div className="prose prose-neutral max-w-none ml-11">
+                          <p className="text-neutral-700 leading-relaxed">
+                            {stakeholder.interests}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+                {/* Policy Implications Section */}
+                <section className="space-y-8">
+                  <div className="flex items-center gap-4">
+                    <div className="w-1 h-8 bg-orange-600 rounded-full"></div>
+                    <h2 className="text-2xl font-semibold text-neutral-900 tracking-tight">
+                      Policy Implications
+                    </h2>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {/* Domestic Policy */}
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+                        Domestic Policy
+                      </h3>
+                      {summary.policyImplications.domestic.map(
+                        (policy, index) => (
+                          <div
+                            key={index}
+                            className="bg-blue-50/50 rounded-2xl p-6 border border-blue-200/50"
+                          >
+                            <h4 className="font-semibold text-neutral-900 mb-3">
+                              {policy.issue}
+                            </h4>
+                            <div className="prose prose-neutral max-w-none">
+                              <p className="text-neutral-700 leading-relaxed">
+                                {policy.impact}
+                              </p>
                             </div>
-                          </li>
-                        ))}
-                      </ul>
+                          </div>
+                        )
+                      )}
                     </div>
 
-                    {/* Conclusion */}
-                    <div className="bg-neutral-50/50 rounded-2xl p-6 border border-neutral-200/50">
-                      <div className="flex items-center gap-3 mb-4">
-                        <span className="bg-blue-100 text-blue-700 font-semibold px-3 py-1 rounded-lg text-xs">
-                          03
-                        </span>
-                        <h3 className="text-xl font-semibold text-neutral-900">
-                          Conclusion
-                        </h3>
-                      </div>
+                    {/* International Policy */}
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+                        International Policy
+                      </h3>
+                      {summary.policyImplications.international.map(
+                        (policy, index) => (
+                          <div
+                            key={index}
+                            className="bg-green-50/50 rounded-2xl p-6 border border-green-200/50"
+                          >
+                            <h4 className="font-semibold text-neutral-900 mb-3">
+                              {policy.issue}
+                            </h4>
+                            <div className="prose prose-neutral max-w-none">
+                              <p className="text-neutral-700 leading-relaxed">
+                                {policy.impact}
+                              </p>
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                </section>
+
+                {/* Economic Impact Section */}
+                <section className="space-y-8">
+                  <div className="flex items-center gap-4">
+                    <div className="w-1 h-8 bg-yellow-600 rounded-full"></div>
+                    <h2 className="text-2xl font-semibold text-neutral-900 tracking-tight">
+                      Economic Impact
+                    </h2>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="bg-yellow-50/50 rounded-2xl p-6 border border-yellow-200/50">
+                      <h3 className="font-semibold text-neutral-900 mb-3">
+                        Markets
+                      </h3>
                       <div className="prose prose-neutral max-w-none">
-                        <Markdown content={summary.keySections.conclusion} />
+                        <p className="text-neutral-700 leading-relaxed">
+                          {summary.economicImpact.markets}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-purple-50/50 rounded-2xl p-6 border border-purple-200/50">
+                      <h3 className="font-semibold text-neutral-900 mb-3">
+                        Trade
+                      </h3>
+                      <div className="prose prose-neutral max-w-none">
+                        <p className="text-neutral-700 leading-relaxed">
+                          {summary.economicImpact.trade}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-red-50/50 rounded-2xl p-6 border border-red-200/50">
+                      <h3 className="font-semibold text-neutral-900 mb-3">
+                        Investment
+                      </h3>
+                      <div className="prose prose-neutral max-w-none">
+                        <p className="text-neutral-700 leading-relaxed">
+                          {summary.economicImpact.investment}
+                        </p>
                       </div>
                     </div>
                   </div>
                 </section>
 
                 {/* Analysis Section */}
-                <section className="space-y-6">
+                <section className="space-y-8">
                   <div className="flex items-center gap-4">
-                    <div className="w-1 h-8 bg-blue-600 rounded-full"></div>
+                    <div className="w-1 h-8 bg-indigo-600 rounded-full"></div>
                     <h2 className="text-2xl font-semibold text-neutral-900 tracking-tight">
                       Analysis
                     </h2>
                   </div>
-                  <div className="pl-5">
-                    <div className="prose prose-neutral max-w-none">
-                      <Markdown content={summary.analysis} />
+
+                  <div className="space-y-6">
+                    {/* Historical Context */}
+                    <div className="bg-neutral-50/50 rounded-2xl p-6 border border-neutral-200/50">
+                      <h3 className="font-semibold text-neutral-900 mb-4">
+                        Historical Context
+                      </h3>
+                      <div className="prose prose-neutral max-w-none">
+                        <p className="text-neutral-700 leading-relaxed">
+                          {summary.analysis.historicalContext}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Scenarios */}
+                    <div className="bg-neutral-50/50 rounded-2xl p-6 border border-neutral-200/50">
+                      <h3 className="font-semibold text-neutral-900 mb-4">
+                        Potential Scenarios
+                      </h3>
+                      <div className="space-y-3">
+                        {summary.analysis.scenarios.map((scenario, index) => (
+                          <div key={index} className="flex items-start gap-3">
+                            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-neutral-100 text-neutral-700 text-xs font-semibold flex-shrink-0 mt-0.5">
+                              {index + 1}
+                            </span>
+                            <div className="prose prose-neutral max-w-none">
+                              <p className="text-neutral-700 leading-relaxed">
+                                {scenario}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Recommendations */}
+                    <div className="space-y-4">
+                      <h3 className="font-semibold text-neutral-900 mb-4">
+                        Recommendations
+                      </h3>
+
+                      <div className="bg-blue-50/50 rounded-2xl p-6 border border-blue-200/50">
+                        <h4 className="font-semibold text-neutral-900 mb-3">
+                          Policy Recommendation
+                        </h4>
+                        <div className="prose prose-neutral max-w-none">
+                          <p className="text-neutral-700 leading-relaxed">
+                            {summary.analysis.recommendations.policy}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="bg-green-50/50 rounded-2xl p-6 border border-green-200/50">
+                        <h4 className="font-semibold text-neutral-900 mb-3">
+                          Investment Recommendation
+                        </h4>
+                        <div className="prose prose-neutral max-w-none">
+                          <p className="text-neutral-700 leading-relaxed">
+                            {summary.analysis.recommendations.investment}
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </section>

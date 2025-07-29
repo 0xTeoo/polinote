@@ -124,17 +124,13 @@ Please ensure your response is valid JSON that matches the specified structure e
    */
   private validateSummaryStructure(data: any): boolean {
     try {
-      // Check summary object
-      if (!data.summary || typeof data.summary !== 'object') {
-        Logger.error('Summary validation failed: missing or invalid summary object', data);
+      // Check headline and overview as direct properties
+      if (!data.headline || typeof data.headline !== 'string') {
+        Logger.error('Summary validation failed: missing or invalid headline', data);
         return false;
       }
-      if (!data.summary.headline || typeof data.summary.headline !== 'string') {
-        Logger.error('Summary validation failed: missing or invalid headline', data.summary);
-        return false;
-      }
-      if (!data.summary.overview || typeof data.summary.overview !== 'string') {
-        Logger.error('Summary validation failed: missing or invalid overview', data.summary);
+      if (!data.overview || typeof data.overview !== 'string') {
+        Logger.error('Summary validation failed: missing or invalid overview', data);
         return false;
       }
 

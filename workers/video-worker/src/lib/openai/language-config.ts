@@ -28,10 +28,8 @@ export const koreanConfig: LanguageConfig = {
 
 필수 JSON 구조:
 {
-  "summary": {
-    "headline": "핵심 이슈를 담은 헤드라인",
-    "overview": "전체 내용의 핵심 요약"
-  },
+  "headline": "핵심 이슈를 담은 헤드라인",
+  "overview": "전체 내용의 핵심 요약",
   "stakeholders": [
     {
       "type": "country",
@@ -78,10 +76,8 @@ export const koreanConfig: LanguageConfig = {
 
 국제정치와 경제적 관점에서 심층 분석을 제공해주세요.`,
   jsonStructure: `{
-  "summary": {
-    "headline": "핵심 이슈를 담은 헤드라인",
-    "overview": "전체 내용의 핵심 요약"
-  },
+  "headline": "핵심 이슈를 담은 헤드라인",
+  "overview": "전체 내용의 핵심 요약",
   "stakeholders": [
     {
       "type": "country|organization",
@@ -148,10 +144,8 @@ Your response must be a JSON object only, do not use markdown code blocks or oth
 
 Required JSON structure:
 {
-  "summary": {
-    "headline": "Headline capturing the core issue",
-    "overview": "Core summary of the entire content"
-  },
+  "headline": "Headline capturing the core issue",
+  "overview": "Core summary of the entire content",
   "stakeholders": [
     {
       "type": "country",
@@ -198,10 +192,8 @@ Required JSON structure:
 
 Provide a comprehensive analysis from geopolitical and economic viewpoints.`,
   jsonStructure: `{
-  "summary": {
-    "headline": "Headline capturing the core issue",
-    "overview": "Core summary of the entire content"
-  },
+  "headline": "Headline capturing the core issue",
+  "overview": "Core summary of the entire content",
   "stakeholders": [
     {
       "type": "country|organization",

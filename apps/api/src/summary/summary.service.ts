@@ -17,20 +17,23 @@ export class SummaryService {
     createDto: CreateSummaryDto,
     queryRunner?: QueryRunner,
   ): Promise<Summary> {
-    const { videoId, language, overview, keySections, analysis } = createDto;
+    const { videoId, language, headline, overview, stakeholders, policyImplications, economicImpact, analysis } = createDto;
     const manager = queryRunner?.manager || this.summaryRepository.manager;
 
     try {
-      const summary = manager.create(Summary, {
+      const summaryEntity = manager.create(Summary, {
         video: { id: videoId },
         language,
+        headline,
         overview,
-        keySections,
+        stakeholders,
+        policyImplications,
+        economicImpact,
         analysis,
       });
 
       // Save using the appropriate manager
-      return manager.save(Summary, summary);
+      return manager.save(Summary, summaryEntity);
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;

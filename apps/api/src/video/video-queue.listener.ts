@@ -73,12 +73,11 @@ export class VideoQueueEventListner implements OnModuleInit {
         this.summaryService.createOne({
           videoId: createdVideo.id,
           language: summary.language,
+          headline: summary.headline,
           overview: summary.overview,
-          keySections: {
-            introduction: summary.keySections.introduction,
-            mainPoints: summary.keySections.mainPoints,
-            conclusion: summary.keySections.conclusion,
-          },
+          stakeholders: summary.stakeholders,
+          policyImplications: summary.policyImplications,
+          economicImpact: summary.economicImpact,
           analysis: summary.analysis,
         })
       }))

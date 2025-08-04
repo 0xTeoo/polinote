@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -15,6 +15,12 @@ interface BriefingCardProps {
 
 export function BriefingCard({ briefing, index }: BriefingCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [formattedDate, setFormattedDate] = useState<string>("");
+
+  useEffect(() => {
+    // Format date only on client side to prevent hydration mismatch
+    setFormattedDate(format(new Date(briefing.publishedAt), "MMM d, yyyy"));
+  }, [briefing.publishedAt]);
 
   return (
     <Link href={`/videos/${briefing.id}`} className="block h-full">
@@ -49,7 +55,7 @@ export function BriefingCard({ briefing, index }: BriefingCardProps) {
             <div className="flex items-center text-sm text-neutral-500 mb-3">
               <CalendarDays className="h-4 w-4 mr-2" />
               <time dateTime={briefing.publishedAt}>
-                {format(new Date(briefing.publishedAt), "MMM d, yyyy")}
+                {formattedDate}
               </time>
             </div>
             <h2 className="font-semibold text-neutral-900 mb-3 line-clamp-2 text-lg">

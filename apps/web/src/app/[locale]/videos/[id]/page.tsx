@@ -4,6 +4,7 @@ import { getVideo } from "@/actions/get-video";
 import { ContentColumn } from "@/components/content-column";
 import { VideoColumn } from "@/components/video-column";
 import { Language } from "@polinote/schemas";
+import { getLocale } from "next-intl/server";
 
 export default async function BriefingPage({
   params,
@@ -11,9 +12,10 @@ export default async function BriefingPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { id } = await params;
+  const currentLocale = await getLocale();
 
   const video = await getVideo(id);
-  const summary = await getSummary(id, Language.KO);
+  const summary = await getSummary(id, currentLocale as Language);
   const transcriptSegments = await getTranscriptSegments(id);
 
   return (

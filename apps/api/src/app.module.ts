@@ -10,7 +10,7 @@ import { NestModules, Routes } from './config/route';
   imports: [
     Configuration,
     PostgresDataSource,
-    BullMQConfig,
+    // BullMQConfig,
     TranscriptModule,
     TranscriptSegmentModule,
     SummaryModule,

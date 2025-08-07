@@ -22,6 +22,7 @@ import { ProcessVideoDto, VideoJobResponseDto, VideoJobStatusDto } from './dto/p
 import { VideoResponseDto } from './dto/video-response.dto';
 import { SummaryService } from '../summary/summary.service';
 import { TranscriptSegmentService } from '../transcript-segment/transcript-segment.service';
+import { SummaryResponseDto } from '../summary/dto/summary-response.dto';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -35,66 +36,45 @@ export class VideoController {
   ) { }
 
   @Get()
-  async findPaginated(
-    @Query() paginationQueryDto: PaginationQueryDTO,
+  async findAll(
+    @Query() paginationQuery: PaginationQueryDTO,
   ): Promise<PaginationResponseDto<VideoResponseDto>> {
-    const { items, meta } = await this.videoService.findPaginated(paginationQueryDto);
-    return PaginationResponseDto.from({
-      items: items.map(item => VideoResponseDto.from(item)),
-      totalItems: meta.totalItems,
-      page: meta.currentPage,
-      limit: meta.itemsPerPage,
-    });
+    const result = await this.videoService.findAll(paginationQuery);
+    return PaginationResponseDto.from(result);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Video> {
-    return this.videoService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<VideoResponseDto> {
+    const video = await this.videoService.findOne(id);
+    return VideoResponseDto.from(video);
   }
 
-  @Get('youtube/:video_id')
-  async findByYoutubeId(@Param('video_id') videoId: string): Promise<Video> {
-    return this.videoService.findByYoutubeId(videoId);
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() createVideoDto: CreateVideoDto): Promise<VideoResponseDto> {
+    const video = await this.videoService.createOne(createVideoDto);
+    return VideoResponseDto.from(video);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id') id: string): Promise<void> {
+    await this.videoService.remove(id);
   }
 
   @Get(':id/summaries')
-  async findVideoSummaries(@Param('id') id: string) {
+  async findVideoSummaries(@Param('id') id: string): Promise<SummaryResponseDto[]> {
     const video = await this.videoService.findOne(id);
-    return video.summaries;
+    return video.summaries.map(SummaryResponseDto.from);
   }
 
   @Get(':id/summaries/:language')
   async findVideoSummaryByLanguage(
     @Param('id') id: string,
     @Param('language') language: Language,
-  ) {
-    return this.summaryService.findByVideoIdAndLanguage(id, language);
-  }
-
-  @Get(':id/transcript-segments')
-  async findVideoTranscriptSegments(@Param('id') id: string) {
-    return this.transcriptSegmentService.findByVideoId(id);
-  }
-
-  @Get(':id/transcript')
-  async findVideoTranscript(@Param('id') id: string) {
-    const video = await this.videoService.findOne(id);
-    return video.transcript;
-  }
-
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  async createOne(
-    @Body() createVideoDto: CreateVideoDto,
-  ): Promise<Video | null> {
-    const newVideo = await this.videoService.createOne(createVideoDto);
-    if (!newVideo) {
-      throw new HttpException(
-        'Failed to create video',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-    return newVideo;
+  ): Promise<SummaryResponseDto> {
+    const summary = await this.summaryService.findByVideoIdAndLanguage(id, language);
+    return SummaryResponseDto.from(summary);
   }
 
   @Post('process')
@@ -149,20 +129,6 @@ export class VideoController {
     }
   }
 
-  @Post('crawl-latest')
-  @HttpCode(HttpStatus.OK)
-  async crawlLatest() {
-    try {
-      await this.videoBatchService.crawlLatestBriefingVideoManually();
-      return { message: 'Crawling process completed' };
-    } catch (error) {
-      throw new HttpException(
-        `Failed to crawl latest briefing video: ${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
   @Get('job/:jobId/status')
   async getJobStatus(@Param('jobId') jobId: string): Promise<VideoJobStatusDto> {
     try {
@@ -211,9 +177,10 @@ export class VideoController {
     }
   }
 
-  @Delete('job/:jobId')
-  async removeJob(@Param('jobId') jobId: string) {
-    await this.videoQueueService.removeJob(jobId);
-    return { message: `Job ${jobId} removed` };
+  @Post('batch/crawl')
+  @HttpCode(HttpStatus.ACCEPTED)
+  async crawlLatestBriefingVideo() {
+    await this.videoBatchService.crawlLatestBriefingVideoManually();
+    return { message: 'Crawl job started' };
   }
 }

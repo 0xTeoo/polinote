@@ -24,7 +24,7 @@ export class OpenAIClient {
 Guidelines:
 ${guidelines}
 
-Please ensure your response is valid JSON that matches the specified structure exactly.`;
+Please ensure your response is in markdown format following the Executive Briefing structure.`;
   }
 
   /**
@@ -88,130 +88,7 @@ Please ensure your response is valid JSON that matches the specified structure e
   }
 
   /**
-   * Clean OpenAI response content by removing markdown code blocks
-   */
-  private cleanResponseContent(content: string): string {
-    if (!content) {
-      throw new Error('Empty response from OpenAI');
-    }
-
-    let cleaned = content.trim();
-
-    // Remove markdown code blocks (```json ... ```)
-    cleaned = cleaned.replace(/```json\s*/g, '').replace(/```\s*$/g, '');
-    cleaned = cleaned.replace(/```\s*/g, '').replace(/```\s*$/g, '');
-
-    // Remove any leading/trailing whitespace
-    cleaned = cleaned.trim();
-
-    // If the response starts with "I'm sorry" or similar, it's not JSON
-    if (cleaned.toLowerCase().startsWith("i'm sorry") || 
-        cleaned.toLowerCase().startsWith("i cannot") ||
-        cleaned.toLowerCase().startsWith("i can't")) {
-      throw new Error('OpenAI refused to process the request: ' + cleaned.substring(0, 100));
-    }
-
-    // Check if it looks like JSON
-    if (!cleaned.startsWith('{') || !cleaned.endsWith('}')) {
-      throw new Error('Response is not in JSON format: ' + cleaned.substring(0, 100));
-    }
-
-    return cleaned;
-  }
-
-  /**
-   * Validate summary structure
-   */
-  private validateSummaryStructure(data: any): boolean {
-    try {
-      // Check headline and overview as direct properties
-      if (!data.headline || typeof data.headline !== 'string') {
-        Logger.error('Summary validation failed: missing or invalid headline', data);
-        return false;
-      }
-      if (!data.overview || typeof data.overview !== 'string') {
-        Logger.error('Summary validation failed: missing or invalid overview', data);
-        return false;
-      }
-
-      // Check stakeholders array
-      if (!Array.isArray(data.stakeholders)) {
-        Logger.error('Summary validation failed: stakeholders is not an array', data.stakeholders);
-        return false;
-      }
-      
-      // Allow empty stakeholders array but validate structure if not empty
-      for (const stakeholder of data.stakeholders) {
-        if (!stakeholder.type || !stakeholder.name || !stakeholder.interests) {
-          Logger.error('Summary validation failed: invalid stakeholder structure', stakeholder);
-          return false;
-        }
-        if (!['country', 'organization'].includes(stakeholder.type)) {
-          Logger.error('Summary validation failed: invalid stakeholder type', stakeholder.type);
-          return false;
-        }
-      }
-
-      // Check policyImplications
-      if (!data.policyImplications || typeof data.policyImplications !== 'object') {
-        Logger.error('Summary validation failed: missing or invalid policyImplications', data.policyImplications);
-        return false;
-      }
-      if (!Array.isArray(data.policyImplications.domestic)) {
-        Logger.error('Summary validation failed: domestic policyImplications is not an array', data.policyImplications.domestic);
-        return false;
-      }
-      if (!Array.isArray(data.policyImplications.international)) {
-        Logger.error('Summary validation failed: international policyImplications is not an array', data.policyImplications.international);
-        return false;
-      }
-
-      // Validate policy implications items
-      for (const item of [...data.policyImplications.domestic, ...data.policyImplications.international]) {
-        if (!item.issue || !item.impact) {
-          Logger.error('Summary validation failed: invalid policy implication item', item);
-          return false;
-        }
-      }
-
-      // Check economicImpact
-      if (!data.economicImpact || typeof data.economicImpact !== 'object') {
-        Logger.error('Summary validation failed: missing or invalid economicImpact', data.economicImpact);
-        return false;
-      }
-      if (!data.economicImpact.markets || !data.economicImpact.trade || !data.economicImpact.investment) {
-        Logger.error('Summary validation failed: missing economicImpact fields', data.economicImpact);
-        return false;
-      }
-
-      // Check analysis
-      if (!data.analysis || typeof data.analysis !== 'object') {
-        Logger.error('Summary validation failed: missing or invalid analysis', data.analysis);
-        return false;
-      }
-      if (!data.analysis.historicalContext || !Array.isArray(data.analysis.scenarios)) {
-        Logger.error('Summary validation failed: missing historicalContext or scenarios', data.analysis);
-        return false;
-      }
-      if (!data.analysis.recommendations || typeof data.analysis.recommendations !== 'object') {
-        Logger.error('Summary validation failed: missing or invalid recommendations', data.analysis.recommendations);
-        return false;
-      }
-      if (!data.analysis.recommendations.policy || !data.analysis.recommendations.investment) {
-        Logger.error('Summary validation failed: missing policy or investment recommendations', data.analysis.recommendations);
-        return false;
-      }
-
-      Logger.info('Summary structure validation passed');
-      return true;
-    } catch (error) {
-      Logger.error('Error during summary structure validation', error as Error);
-      return false;
-    }
-  }
-
-  /**
-   * Generate summary using OpenAI
+   * Generate Executive Briefing using OpenAI
    */
   async summarize(text: string, language: Language): Promise<Summary> {
     try {
@@ -219,10 +96,10 @@ Please ensure your response is valid JSON that matches the specified structure e
       const systemPrompt = this.generateSystemPrompt(config);
       const userPrompt = this.generateUserPrompt(config, text);
 
-      Logger.info(`Generating summary in ${config.nativeName} (${config.name})`);
+      Logger.info(`Generating Executive Briefing in ${config.nativeName} (${config.name})`);
 
       const response = await this.openai.chat.completions.create({
-        model: "gpt-4o",
+        model: "gpt-5",
         messages: [
           {
             role: "system",
@@ -233,9 +110,6 @@ Please ensure your response is valid JSON that matches the specified structure e
             content: userPrompt
           }
         ],
-        temperature: 0.1, // Lower temperature for more consistent JSON output
-        max_tokens: 4000,
-        response_format: { type: "json_object" }, // Force JSON response
       });
 
       const content = response.choices[0]?.message?.content;
@@ -243,36 +117,14 @@ Please ensure your response is valid JSON that matches the specified structure e
         throw new Error('No response from OpenAI');
       }
 
-      // Clean the response content before parsing
-      const cleanedContent = this.cleanResponseContent(content);
-      
-      // Log the cleaned response for debugging
-      Logger.info('OpenAI response cleaned:', cleanedContent.substring(0, 500) + '...');
-
-      let result;
-      try {
-        result = JSON.parse(cleanedContent);
-      } catch (parseError) {
-        Logger.error('Failed to parse JSON response', parseError as Error);
-        Logger.error(content);
-        throw new Error('Invalid JSON response from OpenAI');
-      }
-
-      // Log the parsed result for debugging
-      Logger.info('Parsed result structure:', JSON.stringify(result, null, 2));
-
-      // Validate the structure
-      if (!this.validateSummaryStructure(result)) {
-        Logger.error('Invalid summary structure received', result);
-        throw new Error('Summary structure validation failed');
-      }
+      Logger.info('Generated Executive Briefing successfully');
 
       return {
         language,
-        ...result,
+        content: content.trim()
       };
     } catch (error) {
-      Logger.error('Error generating summary', error as Error);
+      Logger.error('Error generating Executive Briefing', error as Error);
       throw error;
     }
   }

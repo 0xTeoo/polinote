@@ -20,38 +20,7 @@ export interface TranscriptSegment {
 // 새로운 Summary 인터페이스
 export interface Summary {
   language: Language;
-  summary: {
-    headline: string;
-    overview: string;
-  };
-  stakeholders: Array<{
-    type: "country" | "organization";
-    name: string;
-    interests: string;
-  }>;
-  policyImplications: {
-    domestic: Array<{
-      issue: string;
-      impact: string;
-    }>;
-    international: Array<{
-      issue: string;
-      impact: string;
-    }>;
-  };
-  economicImpact: {
-    markets: string;
-    trade: string;
-    investment: string;
-  };
-  analysis: {
-    historicalContext: string;
-    scenarios: string[];
-    recommendations: {
-      policy: string;
-      investment: string;
-    };
-  };
+  content: string; // 마크다운 형식의 Executive Briefing 내용
 }
 
 export interface JobResult {

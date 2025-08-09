@@ -59,7 +59,11 @@ export function Navigation({
   const handleLocaleSelect = (locale: string) => {
     onLocaleChange?.(locale);
     setIsLanguageOpen(false);
-    router.push(`/${locale}`);
+    
+    const pathParts = pathname.split('/');
+    pathParts[1] = locale;
+    const newPath = pathParts.join('/');
+    router.push(newPath);
   };
 
   const languages = [

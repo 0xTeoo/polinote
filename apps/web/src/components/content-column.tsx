@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-import { FileText, FileDigit, Globe, Building } from "lucide-react";
+import { FileText, FileDigit } from "lucide-react";
 import { Markdown } from "@/components/ui/markdown";
 import { SummaryDTO, TranscriptSegmentDTO } from "@polinote/schemas";
 
@@ -35,10 +35,10 @@ export function ContentColumn({
         onValueChange={(value) => setActiveTab(value)}
       >
         <div className="flex justify-center mb-8">
-          <TabsList className="bg-neutral-100/60 p-1 rounded-2xl backdrop-blur-sm border border-neutral-200/50">
+          <TabsList className="bg-white/80 p-1 rounded-2xl backdrop-blur-sm border border-neutral-200/60 shadow-sm">
             <TabsTrigger
               value="summary"
-              className="px-6 py-2.5 text-sm font-medium relative overflow-hidden rounded-xl transition-all duration-300 data-[state=active]:bg-white data-[state=active]:text-neutral-900 data-[state=active]:shadow-minimal data-[state=inactive]:text-neutral-600 hover:text-neutral-900"
+              className="px-6 py-2.5 text-sm font-medium relative overflow-hidden rounded-xl transition-all duration-300 data-[state=active]:bg-white data-[state=active]:text-neutral-900 data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-neutral-200/60 data-[state=inactive]:text-neutral-600 data-[state=inactive]:bg-transparent hover:text-neutral-900 hover:bg-neutral-50/50"
             >
               <div className="flex items-center gap-2.5 relative z-10">
                 <FileDigit
@@ -53,7 +53,7 @@ export function ContentColumn({
             </TabsTrigger>
             <TabsTrigger
               value="transcript"
-              className="px-6 py-2.5 text-sm font-medium relative overflow-hidden rounded-xl transition-all duration-300 data-[state=active]:bg-white data-[state=active]:text-neutral-900 data-[state=active]:shadow-minimal data-[state=inactive]:text-neutral-600 hover:text-neutral-900"
+              className="px-6 py-2.5 text-sm font-medium relative overflow-hidden rounded-xl transition-all duration-300 data-[state=active]:bg-white data-[state=active]:text-neutral-900 data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-neutral-200/60 data-[state=inactive]:text-neutral-600 data-[state=inactive]:bg-transparent hover:text-neutral-900 hover:bg-neutral-50/50"
             >
               <div className="flex items-center gap-2.5 relative z-10">
                 <FileText
@@ -72,268 +72,10 @@ export function ContentColumn({
         <TabsContent value="summary" className="mt-0">
           <Card className="rounded-3xl shadow-minimal border border-neutral-200/50 bg-white/80 backdrop-blur-sm">
             <div className="p-8">
-              <div className="max-h-[70vh] overflow-y-auto pr-6 space-y-12">
-                {/* Headline Section */}
-                <section className="space-y-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-1 h-8 bg-blue-600 rounded-full"></div>
-                    <h2 className="text-2xl font-semibold text-neutral-900 tracking-tight">
-                      Headline
-                    </h2>
-                  </div>
-                  <div className="pl-5">
-                    <div className="prose prose-neutral max-w-none">
-                      <h3 className="text-xl font-semibold text-neutral-900 mb-4">
-                        {summary.headline}
-                      </h3>
-                    </div>
-                  </div>
-                </section>
-
-                {/* Overview Section */}
-                <section className="space-y-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-1 h-8 bg-blue-600 rounded-full"></div>
-                    <h2 className="text-2xl font-semibold text-neutral-900 tracking-tight">
-                      Overview
-                    </h2>
-                  </div>
-                  <div className="pl-5">
-                    <div className="prose prose-neutral max-w-none">
-                      <Markdown content={summary.overview} />
-                    </div>
-                  </div>
-                </section>
-
-                {/* Stakeholders Section */}
-                <section className="space-y-8">
-                  <div className="flex items-center gap-4">
-                    <div className="w-1 h-8 bg-green-600 rounded-full"></div>
-                    <h2 className="text-2xl font-semibold text-neutral-900 tracking-tight">
-                      Key Stakeholders
-                    </h2>
-                  </div>
-
-                  <div className="space-y-4">
-                    {summary.stakeholders.map((stakeholder, index) => (
-                      <div
-                        key={index}
-                        className="bg-neutral-50/50 rounded-2xl p-6 border border-neutral-200/50"
-                        style={{
-                          animationDelay: `${index * 0.1}s`,
-                        }}
-                      >
-                        <div className="flex items-center gap-3 mb-4">
-                          <div
-                            className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                              stakeholder.type === "country"
-                                ? "bg-blue-100"
-                                : "bg-purple-100"
-                            }`}
-                          >
-                            {stakeholder.type === "country" ? (
-                              <Globe className="w-4 h-4 text-blue-600" />
-                            ) : (
-                              <Building className="w-4 h-4 text-purple-600" />
-                            )}
-                          </div>
-                          <h3 className="text-xl font-semibold text-neutral-900">
-                            {stakeholder.name}
-                          </h3>
-                          <span className="bg-neutral-200 text-neutral-700 font-semibold px-3 py-1 rounded-lg text-xs">
-                            {stakeholder.type === "country"
-                              ? "Country"
-                              : "Organization"}
-                          </span>
-                        </div>
-                        <div className="prose prose-neutral max-w-none ml-11">
-                          <p className="text-neutral-700 leading-relaxed">
-                            {stakeholder.interests}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-
-                {/* Policy Implications Section */}
-                <section className="space-y-8">
-                  <div className="flex items-center gap-4">
-                    <div className="w-1 h-8 bg-orange-600 rounded-full"></div>
-                    <h2 className="text-2xl font-semibold text-neutral-900 tracking-tight">
-                      Policy Implications
-                    </h2>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {/* Domestic Policy */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-neutral-900 mb-4">
-                        Domestic Policy
-                      </h3>
-                      {summary.policyImplications.domestic.map(
-                        (policy, index) => (
-                          <div
-                            key={index}
-                            className="bg-blue-50/50 rounded-2xl p-6 border border-blue-200/50"
-                          >
-                            <h4 className="font-semibold text-neutral-900 mb-3">
-                              {policy.issue}
-                            </h4>
-                            <div className="prose prose-neutral max-w-none">
-                              <p className="text-neutral-700 leading-relaxed">
-                                {policy.impact}
-                              </p>
-                            </div>
-                          </div>
-                        )
-                      )}
-                    </div>
-
-                    {/* International Policy */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-neutral-900 mb-4">
-                        International Policy
-                      </h3>
-                      {summary.policyImplications.international.map(
-                        (policy, index) => (
-                          <div
-                            key={index}
-                            className="bg-green-50/50 rounded-2xl p-6 border border-green-200/50"
-                          >
-                            <h4 className="font-semibold text-neutral-900 mb-3">
-                              {policy.issue}
-                            </h4>
-                            <div className="prose prose-neutral max-w-none">
-                              <p className="text-neutral-700 leading-relaxed">
-                                {policy.impact}
-                              </p>
-                            </div>
-                          </div>
-                        )
-                      )}
-                    </div>
-                  </div>
-                </section>
-
-                {/* Economic Impact Section */}
-                <section className="space-y-8">
-                  <div className="flex items-center gap-4">
-                    <div className="w-1 h-8 bg-yellow-600 rounded-full"></div>
-                    <h2 className="text-2xl font-semibold text-neutral-900 tracking-tight">
-                      Economic Impact
-                    </h2>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="bg-yellow-50/50 rounded-2xl p-6 border border-yellow-200/50">
-                      <h3 className="font-semibold text-neutral-900 mb-3">
-                        Markets
-                      </h3>
-                      <div className="prose prose-neutral max-w-none">
-                        <p className="text-neutral-700 leading-relaxed">
-                          {summary.economicImpact.markets}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="bg-purple-50/50 rounded-2xl p-6 border border-purple-200/50">
-                      <h3 className="font-semibold text-neutral-900 mb-3">
-                        Trade
-                      </h3>
-                      <div className="prose prose-neutral max-w-none">
-                        <p className="text-neutral-700 leading-relaxed">
-                          {summary.economicImpact.trade}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="bg-red-50/50 rounded-2xl p-6 border border-red-200/50">
-                      <h3 className="font-semibold text-neutral-900 mb-3">
-                        Investment
-                      </h3>
-                      <div className="prose prose-neutral max-w-none">
-                        <p className="text-neutral-700 leading-relaxed">
-                          {summary.economicImpact.investment}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                {/* Analysis Section */}
-                <section className="space-y-8">
-                  <div className="flex items-center gap-4">
-                    <div className="w-1 h-8 bg-indigo-600 rounded-full"></div>
-                    <h2 className="text-2xl font-semibold text-neutral-900 tracking-tight">
-                      Analysis
-                    </h2>
-                  </div>
-
-                  <div className="space-y-6">
-                    {/* Historical Context */}
-                    <div className="bg-neutral-50/50 rounded-2xl p-6 border border-neutral-200/50">
-                      <h3 className="font-semibold text-neutral-900 mb-4">
-                        Historical Context
-                      </h3>
-                      <div className="prose prose-neutral max-w-none">
-                        <p className="text-neutral-700 leading-relaxed">
-                          {summary.analysis.historicalContext}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Scenarios */}
-                    <div className="bg-neutral-50/50 rounded-2xl p-6 border border-neutral-200/50">
-                      <h3 className="font-semibold text-neutral-900 mb-4">
-                        Potential Scenarios
-                      </h3>
-                      <div className="space-y-3">
-                        {summary.analysis.scenarios.map((scenario, index) => (
-                          <div key={index} className="flex items-start gap-3">
-                            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-neutral-100 text-neutral-700 text-xs font-semibold flex-shrink-0 mt-0.5">
-                              {index + 1}
-                            </span>
-                            <div className="prose prose-neutral max-w-none">
-                              <p className="text-neutral-700 leading-relaxed">
-                                {scenario}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Recommendations */}
-                    <div className="space-y-4">
-                      <h3 className="font-semibold text-neutral-900 mb-4">
-                        Recommendations
-                      </h3>
-
-                      <div className="bg-blue-50/50 rounded-2xl p-6 border border-blue-200/50">
-                        <h4 className="font-semibold text-neutral-900 mb-3">
-                          Policy Recommendation
-                        </h4>
-                        <div className="prose prose-neutral max-w-none">
-                          <p className="text-neutral-700 leading-relaxed">
-                            {summary.analysis.recommendations.policy}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="bg-green-50/50 rounded-2xl p-6 border border-green-200/50">
-                        <h4 className="font-semibold text-neutral-900 mb-3">
-                          Investment Recommendation
-                        </h4>
-                        <div className="prose prose-neutral max-w-none">
-                          <p className="text-neutral-700 leading-relaxed">
-                            {summary.analysis.recommendations.investment}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
+              <div className="max-h-[70vh] overflow-y-auto pr-6">
+                <div className="prose prose-neutral max-w-none">
+                  <Markdown content={summary.content} />
+                </div>
               </div>
             </div>
           </Card>

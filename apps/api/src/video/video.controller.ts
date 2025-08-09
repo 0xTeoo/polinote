@@ -77,6 +77,11 @@ export class VideoController {
     return SummaryResponseDto.from(summary);
   }
 
+  @Get(':id/transcript-segments')
+  async findVideoTranscriptSegments(@Param('id') id: string) {
+    return this.transcriptSegmentService.findByVideoId(id);
+  }
+
   @Post('process')
   @HttpCode(HttpStatus.ACCEPTED)
   async processVideo(

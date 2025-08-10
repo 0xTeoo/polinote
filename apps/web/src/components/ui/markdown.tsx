@@ -1,5 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
@@ -9,34 +10,35 @@ interface MarkdownProps {
 }
 
 const baseStyles = {
-  p: "text-apple-gray-600 leading-relaxed",
-  h1: "text-2xl font-semibold text-apple-gray-900 tracking-tight mt-6 first:mt-0",
-  h2: "text-xl font-semibold text-apple-gray-900 tracking-tight mt-6 first:mt-0",
-  h3: "text-lg font-semibold text-apple-gray-900 tracking-tight mt-6 first:mt-0",
-  h4: "text-base font-semibold text-apple-gray-900 tracking-tight mt-6 first:mt-0",
-  h5: "text-sm font-semibold text-apple-gray-900 tracking-tight mt-6 first:mt-0",
-  h6: "text-sm font-semibold text-apple-gray-900 tracking-tight mt-6 first:mt-0",
-  strong: "font-medium text-apple-gray-800",
-  em: "text-apple-gray-700",
-  code: "text-apple-blue bg-apple-blue/5 rounded px-1 py-0.5 text-sm",
-  pre: "bg-gray-50 border border-gray-100 rounded-lg p-4 overflow-x-auto",
-  ul: "list-disc pl-6 text-apple-gray-600 space-y-2 mt-3",
-  ol: "list-decimal pl-6 text-apple-gray-600 space-y-2 mt-3",
-  li: "text-apple-gray-600",
-  blockquote: "border-l-4 border-apple-blue/30 pl-4 italic text-apple-gray-600 my-4",
-  hr: "border-gray-100 my-6",
-  a: "text-apple-blue hover:underline",
+  p: "text-neutral-700 leading-relaxed mb-4",
+  h1: "text-3xl font-bold text-neutral-900 tracking-tight mt-8 mb-6 first:mt-0",
+  h2: "text-2xl font-semibold text-neutral-900 tracking-tight mt-8 mb-4 first:mt-0",
+  h3: "text-xl font-semibold text-neutral-900 tracking-tight mt-6 mb-3",
+  h4: "text-lg font-semibold text-neutral-900 tracking-tight mt-6 mb-3",
+  h5: "text-base font-semibold text-neutral-900 tracking-tight mt-4 mb-2",
+  h6: "text-sm font-semibold text-neutral-900 tracking-tight mt-4 mb-2",
+  strong: "font-semibold text-neutral-800",
+  em: "text-neutral-700 italic",
+  code: "text-blue-600 bg-blue-50 rounded px-1.5 py-0.5 text-sm font-mono",
+  pre: "bg-neutral-50 border border-neutral-200 rounded-lg p-4 overflow-x-auto mb-4",
+  ul: "list-disc pl-6 text-neutral-700 space-y-2 mt-3 mb-4",
+  ol: "list-decimal pl-6 text-neutral-700 space-y-2 mt-3 mb-4",
+  li: "text-neutral-700 leading-relaxed",
+  blockquote: "border-l-4 border-blue-500/30 pl-4 italic text-neutral-600 my-6 bg-blue-50/30 py-2 rounded-r",
+  hr: "border-neutral-200 my-8",
+  a: "text-blue-600 hover:text-blue-700 hover:underline",
   img: "rounded-lg max-w-full h-auto",
-  table: "min-w-full divide-y divide-gray-200 my-6",
-  th: "px-3 py-2 text-left text-sm font-semibold text-apple-gray-900 bg-gray-50",
-  td: "px-3 py-2 text-sm text-apple-gray-600 border-t border-gray-100",
+  table: "min-w-full divide-y divide-neutral-200 my-6 border border-neutral-200 rounded-lg overflow-hidden",
+  th: "px-4 py-3 text-left text-sm font-semibold text-neutral-900 bg-neutral-50 border-b border-neutral-200",
+  td: "px-4 py-3 text-sm text-neutral-700 border-b border-neutral-100",
 };
 
 export function Markdown({ content, className }: MarkdownProps) {
   return (
-    <div className={cn("prose prose-gray max-w-none", className)}>
+    <div className={cn("prose prose-neutral max-w-none", className)}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw]}
         components={{
           p: ({ children }) => <p className={baseStyles.p}>{children}</p>,
           h1: ({ children }) => <h1 className={baseStyles.h1}>{children}</h1>,

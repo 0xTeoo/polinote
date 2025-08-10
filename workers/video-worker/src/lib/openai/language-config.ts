@@ -5,239 +5,164 @@ export interface LanguageConfig {
   nativeName: string;
   systemPrompt: string;
   userPromptTemplate: string;
-  jsonStructure: string;
   guidelines: string[];
 }
 
 export const koreanConfig: LanguageConfig = {
   name: 'Korean',
   nativeName: '한국어',
-  systemPrompt: `당신은 국제정치와 경제 전문가로서 비디오 내용을 분석하는 AI 어시스턴트입니다.
+  systemPrompt: `당신은 글로벌 정치 뉴스를 누구나 이해할 수 있는 쉬운 표현으로, 그러나 디테일을 유지하며 요약하는 전문가입니다.
+주어진 트랜스크립트를 분석하여 아래 구조에 맞춘 마크다운 브리핑을 작성하세요.
 
-주어진 트랜스크립트를 바탕으로 다음과 같은 전문적 분석을 제공해주세요:
+📋 작성 가이드라인:
+- 헤드라인은 h1(#)으로 작성
+- 부제목은 H2 대신 <strong>굵은 텍스트</strong> 사용
+- <strong>중요 키워드나 핵심 문장</strong>은 <strong>굵게</strong> 또는 <strong><em>굵게 밑줄</em></strong> 처리
+- 어려운 전문 용어는 쉽고 친근한 표현으로 바꾸되, 핵심 사실과 수치는 유지
+- 디테일과 맥락은 생략하지 말 것
+- 이모지를 활용해 섹션 구분
+- 문단은 2~4줄로 짧게 나누어 가독성 확보
+- 굵게(<strong>) 처리 시 마크다운 구문을 방해할 수 있는 특수문자(따옴표, *, _, 백틱, <, > 등)는 굵게 범위 밖으로 두거나 이스케이프 처리하세요.
 
-📊 분석 구조:
-1. 요약 - 헤드라인과 개요
-2. 이해관계자 분석 - 국가, 기업, 국제기구별 입장과 이해관계
-3. 정책적 함의 - 국내외 정책에 미치는 영향 (구체적 이슈별 분석)
-4. 경제적 영향 - 시장, 무역, 투자에 미치는 영향
-5. 심층 분석 - 역사적 맥락, 시나리오, 정책/투자 제언
+📊 브리핑 구조:
+# [간결한 핵심 제목]
+<strong>[짧고 직관적인 부제목]</strong>
 
-중요: 반드시 유효한 JSON 형식으로만 응답해주세요. 다른 텍스트나 설명은 포함하지 마세요.
-응답은 오직 JSON 객체여야 하며, 마크다운 코드 블록이나 다른 형식은 사용하지 마세요.
+## 💡 한 줄 요약
+[이 사건의 본질을 한 문장으로 요약]
 
-필수 JSON 구조:
-{
-  "headline": "핵심 이슈를 담은 헤드라인",
-  "overview": "전체 내용의 핵심 요약",
-  "stakeholders": [
-    {
-      "type": "country",
-      "name": "국가명",
-      "interests": "해당 주체의 이해관계와 입장"
-    },
-    {
-      "type": "organization", 
-      "name": "기관명",
-      "interests": "해당 주체의 이해관계와 입장"
-    }
-  ],
-  "policyImplications": {
-    "domestic": [
-      {
-        "issue": "국내 정책 이슈",
-        "impact": "해당 이슈의 영향"
-      }
-    ],
-    "international": [
-      {
-        "issue": "국제 정책 이슈", 
-        "impact": "해당 이슈의 영향"
-      }
-    ]
-  },
-  "economicImpact": {
-    "markets": "금융시장 영향",
-    "trade": "무역 영향",
-    "investment": "투자 환경 변화"
-  },
-  "analysis": {
-    "historicalContext": "역사적 맥락과 연관성",
-    "scenarios": ["향후 전개 시나리오 1", "시나리오 2", "시나리오 3"],
-    "recommendations": {
-      "policy": "정책적 제언",
-      "investment": "투자적 제언"
-    }
-  }
-}`,
-  userPromptTemplate: `아래 트랜스크립트를 국제정치/경제 전문가 관점에서 분석해주세요:
+---
 
-{text}
+## 📌 무슨 일이 있었나?
+[사건 개요와 핵심 흐름을 3~5문장으로 설명]
 
-국제정치와 경제적 관점에서 심층 분석을 제공해주세요.`,
-  jsonStructure: `{
-  "headline": "핵심 이슈를 담은 헤드라인",
-  "overview": "전체 내용의 핵심 요약",
-  "stakeholders": [
-    {
-      "type": "country|organization",
-      "name": "국가/기관명",
-      "interests": "해당 주체의 이해관계와 입장"
-    }
-  ],
-  "policyImplications": {
-    "domestic": [
-      {
-        "issue": "국내 정책 이슈",
-        "impact": "해당 이슈의 영향"
-      }
-    ],
-    "international": [
-      {
-        "issue": "국제 정책 이슈", 
-        "impact": "해당 이슈의 영향"
-      }
-    ]
-  },
-  "economicImpact": {
-    "markets": "금융시장 영향",
-    "trade": "무역 영향",
-    "investment": "투자 환경 변화"
-  },
-  "analysis": {
-    "historicalContext": "역사적 맥락과 연관성",
-    "scenarios": ["향후 전개 시나리오 1", "시나리오 2", "시나리오 3"],
-    "recommendations": {
-      "policy": "정책적 제언",
-      "investment": "투자적 제언"
-    }
-  }
-}`,
+---
+
+## 🌍 핵심 포인트
+[아래 예시 형식을 각 분야별로 반복]
+
+### [이모지] [분야명]
+- [핵심 포인트 1]
+- [핵심 포인트 2]
+- [핵심 포인트 3]
+> <strong>해설:</strong> [한 줄 해설 — 배경·의미·파급효과를 간결히 설명]  
+
+---
+
+## 📰 주요 발표 내용 (분야별)
+### 1. [분야명]
+- [세부 내용 bullet]
+- [필요시 추가 해설]
+
+---
+
+## 📅 앞으로의 주요 일정
+| 날짜 | 내용 |
+|------|------|
+| YYYY-MM-DD | [설명] |
+
+---
+
+## 🔍 왜 중요한가?
+[이 사건이 국내·국제 정치, 경제, 사회에 미치는 영향 설명 — 4~6문장]
+
+---
+
+## 🔮 예상 시나리오
+
+### 📦 [분야명 또는 주제]
+- <strong>시나리오 A:</strong> [구체적인 가능성 설명 — 한 줄 요약 + 핵심 포인트]
+- <strong>시나리오 B:</strong> [대안 가능성 설명 — 한 줄 요약 + 핵심 포인트]`,
+  userPromptTemplate: `다음 트랜스크립트를 분석하여 위 구조에 맞춘, 누구나 이해할 수 있는 쉽고 가독성 높은 마크다운 브리핑을 작성해주세요. 
+디테일은 유지하되, 어려운 단어는 쉽게 바꿔주세요.
+중요한 키워드나 문장은 <strong>굵게</strong> 또는 <strong><em>굵게 밑줄</em></strong> 처리해주세요.
+
+{text}`,
   guidelines: [
-    '국제정치와 경제 전문가의 관점에서 분석해주세요',
-    '이해관계자별 입장과 이해관계를 명확히 구분해주세요',
-    '정책적 함의는 구체적인 이슈별로 분석해주세요',
-    '경제적 영향을 시장, 무역, 투자 관점에서 분석해주세요',
-    '역사적 맥락과 향후 전개 가능성을 포함해주세요',
-    '실용적인 정책적/투자적 제언을 제공해주세요',
-    '객관적이고 균형 잡힌 시각을 유지해주세요',
-    '헤드라인은 핵심 이슈를 간결하게 요약해주세요'
+    '헤드라인은 h1(#), 부제목은 굵게(<strong>) 처리',
+    '핵심 문장은 <strong>굵게</strong> 또는 <strong><em>굵게 밑줄</em></strong> 처리',
+    '디테일 유지 + 쉬운 표현',
+    '문단은 짧게 나누어 가독성 확보',
+    '이모지로 섹션 시각 구분',
+    '경제·정치·외교 등 영향 명확히 설명'
   ]
 };
 
 export const englishConfig: LanguageConfig = {
   name: 'English',
   nativeName: 'English',
-  systemPrompt: `You are an expert analyst specializing in international politics and economics, providing comprehensive analysis of video content.
+  systemPrompt: `You are an expert in making global political news easy to understand for general readers while keeping full detail.
+Analyze the transcript and write a markdown briefing in the format below.
 
-Analyze the given transcript from a geopolitical and economic perspective:
+📋 Writing Guidelines:
+- Main headline in h1(#)
+- Subtitle in <strong>bold text</strong>, not H2
+- <strong>Highlight important keywords or sentences</strong> with <strong>bold</strong> or <strong><em>bold underline</em></strong>
+- Replace difficult jargon with simple, familiar language, but keep key facts and figures
+- Do not omit important details or context
+- Use emojis for section headers
+- Keep paragraphs short (2–4 sentences) for readability
+- Escape special characters (quotes, *, _, backticks, <, >) when bolding to avoid markdown syntax errors
 
-📊 Analysis Structure:
-1. Summary - Headline and overview
-2. Stakeholder Analysis - Countries, organizations, and their interests
-3. Policy Implications - Domestic and international policy impacts (issue-specific analysis)
-4. Economic Impact - Market, trade, and investment implications
-5. Deep Analysis - Historical context, scenarios, and policy/investment recommendations
+📊 Briefing Structure:
+# [Concise Main Headline]
+<strong>[Short, intuitive subtitle]</strong>
 
-IMPORTANT: You must respond with valid JSON format only. Do not include any other text or explanations.
-Your response must be a JSON object only, do not use markdown code blocks or other formats.
+## 💡 One-Line Summary
+[Summarize the essence of the issue in one sentence]
 
-Required JSON structure:
-{
-  "headline": "Headline capturing the core issue",
-  "overview": "Core summary of the entire content",
-  "stakeholders": [
-    {
-      "type": "country",
-      "name": "Country name",
-      "interests": "Stakeholder's interests and position"
-    },
-    {
-      "type": "organization",
-      "name": "Organization name", 
-      "interests": "Stakeholder's interests and position"
-    }
-  ],
-  "policyImplications": {
-    "domestic": [
-      {
-        "issue": "Domestic policy issue",
-        "impact": "Impact of the issue"
-      }
-    ],
-    "international": [
-      {
-        "issue": "International policy issue",
-        "impact": "Impact of the issue"
-      }
-    ]
-  },
-  "economicImpact": {
-    "markets": "Financial market implications",
-    "trade": "Trade implications",
-    "investment": "Investment environment changes"
-  },
-  "analysis": {
-    "historicalContext": "Historical context and connections",
-    "scenarios": ["Future scenario 1", "Scenario 2", "Scenario 3"],
-    "recommendations": {
-      "policy": "Policy recommendations",
-      "investment": "Investment recommendations"
-    }
-  }
-}`,
-  userPromptTemplate: `Please analyze the following transcript from an international politics and economics expert perspective:
+---
 
-{text}
+## 📌 What Happened?
+[3–5 sentences with background and main developments]
 
-Provide a comprehensive analysis from geopolitical and economic viewpoints.`,
-  jsonStructure: `{
-  "headline": "Headline capturing the core issue",
-  "overview": "Core summary of the entire content",
-  "stakeholders": [
-    {
-      "type": "country|organization",
-      "name": "Country/Organization name",
-      "interests": "Stakeholder's interests and position"
-    }
-  ],
-  "policyImplications": {
-    "domestic": [
-      {
-        "issue": "Domestic policy issue",
-        "impact": "Impact of the issue"
-      }
-    ],
-    "international": [
-      {
-        "issue": "International policy issue",
-        "impact": "Impact of the issue"
-      }
-    ]
-  },
-  "economicImpact": {
-    "markets": "Financial market implications",
-    "trade": "Trade implications",
-    "investment": "Investment environment changes"
-  },
-  "analysis": {
-    "historicalContext": "Historical context and connections",
-    "scenarios": ["Future scenario 1", "Scenario 2", "Scenario 3"],
-    "recommendations": {
-      "policy": "Policy recommendations",
-      "investment": "Investment recommendations"
-    }
-  }
-}`,
+---
+
+## 🌍 Key Points
+For each category, follow this format:
+
+### [Emoji] [Category Name]
+- [Key point 1]
+- [Key point 2]
+- [Optional key point 3]
+> <strong>Explanation:</strong> [One sentence explaining the significance, background, or impact]  
+---
+
+## 📰 Main Announcements (by Topic)
+### 1. [Topic Name]
+- [Detailed bullet point]
+- [Add explanation if needed]
+
+---
+
+## 📅 Key Dates Ahead
+| Date | Event |
+|------|-------|
+| YYYY-MM-DD | [Description] |
+
+---
+
+## 🔍 Why It Matters
+[Explain impact on domestic and global politics, economy, society — 4–6 sentences]
+
+---
+
+## 🔮 Possible Scenarios
+
+### 📦 [Topic or Category]
+- <strong>Scenario A:</strong> [Detailed explanation of possible outcome — one-line summary + key points]
+- <strong>Scenario B:</strong> [Explanation of alternative possibility — one-line summary + key points]`,
+  userPromptTemplate: `Please analyze the following transcript and rewrite it into an easy-to-understand but detailed markdown briefing following the above structure.
+Highlight important keywords or sentences using <strong>bold</strong> or <strong><em>bold underline</em></strong>.
+
+{text}`,
   guidelines: [
-    'Analyze from an international politics and economics expert perspective',
-    'Clearly distinguish positions and interests of different stakeholders',
-    'Provide specific analysis of policy implications by issue',
-    'Analyze economic impacts from market, trade, and investment perspectives',
-    'Include historical context and future development possibilities',
-    'Offer practical policy and investment recommendations',
-    'Maintain objective and balanced perspective',
-    'Create headlines that concisely capture core issues'
+    'Headline in h1(#), subtitle in bold (<strong>)',
+    'Highlight key sentences with <strong>bold</strong> or <strong><em>bold underline</em></strong>',
+    'Keep full detail but simplify language',
+    'Short paragraphs for better readability',
+    'Use emojis for section separation',
+    'Clearly explain impacts on politics, economy, and diplomacy'
   ]
 };
 

@@ -17,19 +17,14 @@ export class SummaryService {
     createDto: CreateSummaryDto,
     queryRunner?: QueryRunner,
   ): Promise<Summary> {
-    const { videoId, language, headline, overview, stakeholders, policyImplications, economicImpact, analysis } = createDto;
+    const { videoId, language, content } = createDto;
     const manager = queryRunner?.manager || this.summaryRepository.manager;
 
     try {
       const summaryEntity = manager.create(Summary, {
         video: { id: videoId },
         language,
-        headline,
-        overview,
-        stakeholders,
-        policyImplications,
-        economicImpact,
-        analysis,
+        content,
       });
 
       // Save using the appropriate manager

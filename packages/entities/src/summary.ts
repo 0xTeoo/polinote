@@ -12,47 +12,8 @@ export class Summary extends DefaultEntity {
   @Column({ type: "enum", name: "language", enum: Language })
   language: Language;
 
-  @Column({ type: "text", name: "headline", nullable: true })
-  headline: string;
-
-  @Column({ type: "text", name: "overview", nullable: true })
-  overview: string;
-
-  @Column({ type: "json", name: "stakeholders", nullable: true })
-  stakeholders: Array<{
-    type: "country" | "organization";
-    name: string;
-    interests: string;
-  }>;
-
-  @Column({ type: "json", name: "policy_implications", nullable: true })
-  policyImplications: {
-    domestic: Array<{
-      issue: string;
-      impact: string;
-    }>;
-    international: Array<{
-      issue: string;
-      impact: string;
-    }>;
-  };
-
-  @Column({ type: "json", name: "economic_impact", nullable: true })
-  economicImpact: {
-    markets: string;
-    trade: string;
-    investment: string;
-  };
-
-  @Column({ type: "json", name: "analysis", nullable: true })
-  analysis: {
-    historicalContext: string;
-    scenarios: string[];
-    recommendations: {
-      policy: string;
-      investment: string;
-    };
-  };
+  @Column({ type: "text", name: "content" })
+  content: string; // 마크다운 형식의 Executive Briefing 내용
 
   @ManyToOne(() => Video, (video) => video.summaries, {
     onDelete: "CASCADE",

@@ -1,123 +1,80 @@
-# Polinote
+# 🎯 Polinote  
+> **From YouTube to Insights — Automated, AI-powered Video Processing Platform**  
+> A production-ready, microservices-based system for ingesting YouTube videos, transcribing audio, and generating AI summaries in real time.
 
-**A modern, scalable platform for processing, transcribing, and summarizing YouTube videos, with a full-stack web interface and robust API.**
-
----
-
-## 1. Project Name & One-liner Description
-
-**Polinote**  
-A full-stack platform for ingesting YouTube videos, transcribing audio, generating summaries, and presenting results via a modern web interface.  
-**This project is part of my personal portfolio.**
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-blue.svg)](https://www.typescriptlang.org/)
+[![NestJS](https://img.shields.io/badge/NestJS-11.0+-red.svg)](https://nestjs.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-15.3+-black.svg)](https://nextjs.org/)
+[![BullMQ](https://img.shields.io/badge/BullMQ-5.1+-orange.svg)](https://docs.bullmq.io/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
 
 ---
 
-## 2. Key Features / Highlights
-
-- **Automated YouTube Video Processing:** Download, transcribe, and summarize videos with a single job
-- **Modern Web Interface:** Built with Next.js and Tailwind CSS for a responsive, user-friendly experience
-- **Robust API:** RESTful backend using NestJS, supporting job management, results retrieval, and more
-- **Scalable Worker Architecture:** BullMQ-based video worker for distributed, reliable processing
-- **Type-safe Shared Schemas:** Shared TypeScript types and entities across services
-- **Cloud-Ready:** Dockerized, with Redis and database integration
-- **Extensible & Testable:** OOP processor chain, clear separation of concerns, and comprehensive testability
+## 🚀 Overview
+**Polinote** automates the entire pipeline from YouTube video ingestion to structured, searchable insights.  
+It combines **scalable cloud architecture**, **event-driven processing**, and **state-of-the-art AI** to turn hours of content into minutes of actionable information.
 
 ---
 
-## 3. Installation & Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- Docker & Docker Compose
-- Redis
-- PostgreSQL
-- `yt-dlp` and `ffmpeg` installed on worker hosts
-- OpenAI API key
-- YouTube API Key
-
-### Manual Local Development
-
-1. **Install dependencies (monorepo):**
-   ```bash
-   pnpm install
-   ```
-2. **Start Redis (if not using Docker):**
-   ```bash
-   docker run -d -p 6379:6379 redis:alpine
-   ```
-3. **Run services:**
-   - API: `pnpm --filter @polinote/api dev`
-   - Web: `pnpm --filter @polinote/web dev`
-   - Worker: `pnpm --filter @polinote/video-worker dev`
+## 🎯 Key Features & Business Value
+- **Automated Content Processing** — Download, transcribe, and summarize with no manual steps.
+- **AI-Powered Insights** — OpenAI Whisper for transcription, GPT-5 for summarization.
+- **Scalable & Resilient** — BullMQ job queues, multi-AZ AWS deployment.
+- **Developer-Friendly** — Type-safe monorepo, shared schemas, comprehensive documentation.
+- **Use Cases**:
+  - Newsroom automation for instant press briefing summaries.
+  - Policy research with searchable, timestamped transcripts.
+  - Educational video indexing for fast knowledge retrieval.
 
 ---
 
-## 4. Project Structure
+## 🏗️ Architecture
+![AWS Architecture Diagram](https://private-user-images.githubusercontent.com/76833627/469801169-27d93b2d-1fe3-47f8-9921-563765b0c46e.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTQ4MTcwMTQsIm5iZiI6MTc1NDgxNjcxNCwicGF0aCI6Ii83NjgzMzYyNy80Njk4MDExNjktMjdkOTNiMmQtMWZlMy00N2Y4LTk5MjEtNTYzNzY1YjBjNDZlLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA4MTAlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwODEwVDA5MDUxNFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWJlNTBlYjMwYzdkODI2YjI1OWZhNDIwZTc1YmFjNzgzMzE2ZjZhZTVkZWQ4Mjg5N2FiOWY2OTM5Mzg0NTc4MjgmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.1FnBJ34rowXoTuEDKIUE6Ic40ZqrP_j2UHX6CQkH7og)  
+*Multi-AZ AWS architecture with on-premise worker integration.*
 
-```
-polinote/
-├── apps/
-│   ├── api/           # NestJS backend API
-│   └── web/           # Next.js frontend
-├── workers/
-│   └── video-worker/  # BullMQ-based video processing worker
-├── packages/
-│   ├── schemas/       # Shared TypeScript schemas
-│   └── entities/      # Shared ORM entities
-├── docker-compose.yaml
-└── ...
-```
+**Highlights:**
+- **Public Subnets:** Bastion Host, VPN Server
+- **Private Subnets:** Web/API/Redis, RDS
+- **On-Premise Worker:** Heavy media processing via secure VPN
+- **Security:** Bastion SSH access, private RDS, VPC isolation
 
 ---
 
-## 5. Tech Stack
+## 🛠️ Technology Stack
 
-- **Frontend:** Next.js, React, Tailwind CSS
-- **Backend:** NestJS, TypeORM, BullMQ, Redis, PostgreSQL
-- **Worker:** Node.js, BullMQ, OpenAI API, yt-dlp, ffmpeg
-- **Shared:** TypeScript monorepo (pnpm workspaces)
-- **Infrastructure:** Docker, Docker Compose, Redis, AWS-ready
----
-
-## 6. Database Schema
-
-![Database ERD](https://private-user-images.githubusercontent.com/76833627/469805701-ed3f0a4b-c40b-4eea-a589-79dc50c2f1e5.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTMyODAxNDIsIm5iZiI6MTc1MzI3OTg0MiwicGF0aCI6Ii83NjgzMzYyNy80Njk4MDU3MDEtZWQzZjBhNGItYzQwYi00ZWVhLWE1ODktNzlkYzUwYzJmMWU1LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA3MjMlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNzIzVDE0MTA0MlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTE3NzAwOTUxZGQxOTlmMDdjYWI1MjZmNDEzYTEzNGZhYTAyZWI1MzVhN2U4Yzc5Y2Q1ZGIzMTY1ODhmN2U3ZmUmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.TW8W7xlavgFpIzPQhGRjGzcxPZzATuA78VNWx60Jf-c)
-
-### **Core Entities**
-- **Videos:** YouTube video metadata and processing status
-- **Transcripts:** Audio transcription data and segments
-- **Transcript Segments:** Individual time-stamped transcript segments
-- **Summaries:** Generated content summaries and analysis
-
-### **Key Relationships**
-- **Videos → Transcripts:** One-to-one relationship for transcription results
-- **Transcripts → Transcript Segments:** One-to-many relationship for detailed segments
-- **Videos → Summaries:** One-to-many relationship for multiple summary types
----
-
-## 7. Architecture (AWS)
-
-![AWS Architecture Diagram](https://private-user-images.githubusercontent.com/76833627/469801169-27d93b2d-1fe3-47f8-9921-563765b0c46e.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTMyODAwODIsIm5iZiI6MTc1MzI3OTc4MiwicGF0aCI6Ii83NjgzMzYyNy80Njk4MDExNjktMjdkOTNiMmQtMWZlMy00N2Y4LTk5MjEtNTYzNzY1YjBjNDZlLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA3MjMlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNzIzVDE0MDk0MlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWViNDEwYjQzOWNmYjI1N2I0ZWNhMDQ5OTgwZDEwN2E4NDY2MWFlZTFmYWRmYzU4ODA4ZTNhYTQ0NzQ4ODk1YTkmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.vY0zflL8aWgZ_5e7iadxjN_g9_XGiMU9FuZ6SjaDe-M)
-
-**Multi-AZ VPC Setup (10.0.0.0/16):**
-
-### **Core Components**
-- **Public Subnets:** Bastion Host (AZ1), VPN Server (AZ2)
-- **Private Subnets:** Web/API/Redis (AZ2), RDS (both AZs)
-- **External:** On-Premise Worker Server (video processing)
-
-### **Key Features**
-- **High Availability:** Multi-AZ deployment with RDS
-- **Security:** Private subnets for app services, Bastion for SSH access
-- **Hybrid Cloud:** VPN connection to on-premise worker
-- **Scalability:** Separated concerns (web/API/database/worker)
+| Component | Technology | Version | Purpose |
+|-----------|------------|---------|---------|
+| **Frontend** | Next.js + React | 15.3.1 | Modern SSR UI |
+| **Backend** | NestJS + TypeORM | 11.0.1 | RESTful API |
+| **Worker** | BullMQ + Node.js | 5.1.0 | Async job processing |
+| **Database** | PostgreSQL | Latest | Structured storage |
+| **Cache/Queue** | Redis | 7.4.2 | Queue + caching |
+| **AI** | GPT-5, Whisper-1 | Latest | Summarization & transcription |
+| **Media** | yt-dlp + ffmpeg | Latest | Video/audio extraction |
+| **Infra** | Docker + Compose | Latest | Container orchestration |
 
 ---
 
-## 8. License
+## 🗄️ Database Model
+![Database ERD](https://private-user-images.githubusercontent.com/76833627/469805701-ed3f0a4b-c40b-4eea-a589-79dc50c2f1e5.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTQ4MTcwMTQsIm5iZiI6MTc1NDgxNjcxNCwicGF0aCI6Ii83NjgzMzYyNy80Njk4MDU3MDEtZWQzZjBhNGItYzQwYi00ZWVhLWE1ODktNzlkYzUwYzJmMWU1LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA4MTAlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwODEwVDA5MDUxNFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTRlZjlkN2U3ZDE4OGUxZmVmYmFkYTczYWNmMDViZTMzNDUxNDY3YzVkYWZmNGJiNmEyZjVjMDVkMjc4MWNhMDUmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.y3gkOF4snc3OYmIUuBYV1qW_nWh0JgPYNMEtcAXCZMA)  
+*Video → Transcript → Segments → Summaries*
 
-This project is for demonstration and learning purposes only.  
-All rights reserved.
+- **Videos:** Metadata + processing state
+- **Transcripts:** One-to-one with videos
+- **Segments:** Time-stamped transcript entries
+- **Summaries:** Multiple summary types per video
 
 ---
+
+## 📄 License
+This project is for **personal portfolio demonstration only**.  
+Not licensed for commercial use without permission.
+
+---
+
+<div align="center">
+
+**Built with ❤️ using modern software engineering practices**  
+TypeScript • NestJS • Next.js • BullMQ • PostgreSQL • Redis • Docker
+
+</div>

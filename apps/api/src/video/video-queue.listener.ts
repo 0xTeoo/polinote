@@ -73,12 +73,7 @@ export class VideoQueueEventListner implements OnModuleInit {
         this.summaryService.createOne({
           videoId: createdVideo.id,
           language: summary.language,
-          headline: summary.headline,
-          overview: summary.overview,
-          stakeholders: summary.stakeholders,
-          policyImplications: summary.policyImplications,
-          economicImpact: summary.economicImpact,
-          analysis: summary.analysis,
+          content: summary.content, // 마크다운 형식의 Executive Briefing 내용
         })
       }))
 

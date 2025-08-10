@@ -5,6 +5,7 @@ import { PaginationQueryDTO } from '../common/dto/pagination.dto';
 import { getPaginationParams } from '../common/utils/pagination.util';
 import { Video } from '@polinote/entities';
 import { CreateVideoDto } from './dto/create-video.dto';
+import { PaginationResult } from '../types';
 
 @Injectable()
 export class VideoService {
@@ -32,6 +33,23 @@ export class VideoService {
     return savedVideo;
   }
 
+  async findAll(paginationQueryDto: PaginationQueryDTO): Promise<PaginationResult<Video>> {
+    const { page, limit, skip } = getPaginationParams(paginationQueryDto);
+
+    const [items, totalItems] = await this.videoRepository.findAndCount({
+      order: { createdAt: 'ASC' },
+      take: limit,
+      skip: skip,
+    });
+
+    return {
+      items,
+      totalItems,
+      page,
+      limit,
+    };
+  }
+
   async findPaginated(
     paginationQueryDto: PaginationQueryDTO,
   ) {
@@ -56,6 +74,7 @@ export class VideoService {
   async findOne(id: string): Promise<Video> {
     const video = await this.videoRepository.findOne({
       where: { id },
+      relations: ['transcript', 'summaries'],
     });
 
     if (!video) {
@@ -76,5 +95,10 @@ export class VideoService {
     }
 
     return video;
+  }
+
+  async remove(id: string): Promise<void> {
+    const video = await this.findOne(id);
+    await this.videoRepository.remove(video);
   }
 }

@@ -9,28 +9,26 @@ export class SummarizeProcessor extends BaseProcessor<SummarizeInput, SummarizeO
   }
 
   async process(input: SummarizeInput, jobId: string): Promise<SummarizeOutput> {
-    this.log('Starting summarization with new structure', jobId);
+    this.log('Starting Executive Briefing generation', jobId);
 
     try {
-      this.logStep(1, 'Generating Korean summary', jobId);
+      this.logStep(1, 'Generating Korean Executive Briefing', jobId);
       const koreanSummary = await this.openaiClient.summarize(input.rawTranscript, Language.KO);
       
-      this.logStep(2, 'Generating English summary', jobId);
+      this.logStep(2, 'Generating English Executive Briefing', jobId);
       const englishSummary = await this.openaiClient.summarize(input.rawTranscript, Language.EN);
 
       const summaries = [koreanSummary, englishSummary];
 
-      this.log(`Generated ${summaries.length} summaries with new structure`, jobId);
-      this.log(`Korean headline: ${koreanSummary.summary.headline}`, jobId);
-      this.log(`English headline: ${englishSummary.summary.headline}`, jobId);
-      this.log(`Korean stakeholders: ${koreanSummary.stakeholders.length} entities`, jobId);
-      this.log(`English stakeholders: ${englishSummary.stakeholders.length} entities`, jobId);
+      this.log(`Generated ${summaries.length} Executive Briefings`, jobId);
+      this.log(`Korean content length: ${koreanSummary.content.length} characters`, jobId);
+      this.log(`English content length: ${englishSummary.content.length} characters`, jobId);
 
-      this.logSuccess('Summarization completed successfully', jobId);
+      this.logSuccess('Executive Briefing generation completed successfully', jobId);
 
       return { summaries };
     } catch (error) {
-      this.logError('Summarization failed', error as Error, jobId);
+      this.logError('Executive Briefing generation failed', error as Error, jobId);
       throw error;
     }
   }

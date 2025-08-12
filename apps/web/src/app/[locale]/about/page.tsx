@@ -20,6 +20,7 @@ export default async function AboutPage({
           <PageHeader
             title={t("about.hero.title")}
             description={t("about.hero.description")}
+            badgeTitle={t("about.hero.badge.title")}
           />
         </div>
 

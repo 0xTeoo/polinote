@@ -1,7 +1,10 @@
 {
   "main": {
     "title": "Politics, Simplified.",
-    "description": "AI-powered analysis of political videos for concise summaries and actionable insights"
+    "description": "AI-powered analysis of political videos for concise summaries and actionable insights",
+    "badge": {
+      "title": "Automatically updated with latest videos"
+    }
   },
   "about": {
     "hero": {

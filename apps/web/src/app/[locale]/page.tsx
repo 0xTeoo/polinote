@@ -20,10 +20,11 @@ export default async function HomePage({
     <div className="min-h-screen bg-neutral-50">
       <main>
         <div className="container mx-auto px-4 py-12">
-          <div className={`transition-all duration-700 ease-out`}>
+          <div className="flex flex-col gap-10 items-center transition-all duration-700 ease-out">
             <PageHeader
               title={t("main.title")}
               description={t("main.description")}
+              badgeTitle={t("main.badge.title")}
             />
             <BriefingList briefings={videos} pagination={pagination} />
           </div>

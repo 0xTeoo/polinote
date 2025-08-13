@@ -4,15 +4,16 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
-import { 
-  ArrowLeft, 
-  Globe, 
-  ChevronDown, 
-  Menu, 
+import {
+  ArrowLeft,
+  Globe,
+  ChevronDown,
+  Menu,
   X,
   Home,
-  Info
+  Info,
 } from "lucide-react";
+import Image from "next/image";
 
 interface NavigationProps {
   showBackButton?: boolean;
@@ -38,7 +39,8 @@ export function Navigation({
   const router = useRouter();
 
   // Check if we're on a video detail page to show back button
-  const isVideoDetailPage = pathname.includes('/videos/') && pathname.split('/').length > 3;
+  const isVideoDetailPage =
+    pathname.includes("/videos/") && pathname.split("/").length > 3;
   const shouldShowBackButton = showBackButton || isVideoDetailPage;
 
   // Detect outside clicks on language dropdown
@@ -59,10 +61,10 @@ export function Navigation({
   const handleLocaleSelect = (locale: string) => {
     onLocaleChange?.(locale);
     setIsLanguageOpen(false);
-    
-    const pathParts = pathname.split('/');
+
+    const pathParts = pathname.split("/");
     pathParts[1] = locale;
-    const newPath = pathParts.join('/');
+    const newPath = pathParts.join("/");
     router.push(newPath);
   };
 
@@ -71,14 +73,15 @@ export function Navigation({
     { code: "ko", name: "한국어", flag: "🇰🇷" },
   ];
 
-  const currentLanguage = languages.find(lang => lang.code === currentLocale) || languages[0];
+  const currentLanguage =
+    languages.find((lang) => lang.code === currentLocale) || languages[0];
 
   // Get the appropriate back href
   const getBackHref = () => {
     if (backHref !== "/") return backHref;
     if (isVideoDetailPage) {
       // Extract locale from pathname
-      const pathParts = pathname.split('/');
+      const pathParts = pathname.split("/");
       const locale = pathParts[1];
       return `/${locale}`;
     }
@@ -106,11 +109,15 @@ export function Navigation({
                 <div className="h-4 w-px bg-gray-300 hidden sm:block" />
               </>
             )}
-            
+
             <Link href="/" className="flex items-center space-x-2 group">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-all duration-200">
-                <span className="text-white font-bold text-sm">P</span>
-              </div>
+              <Image
+                src="/logo.svg"
+                alt="Polinote Logo"
+                className="w-8 h-8"
+                width={32}
+                height={32}
+              />
               <h1 className="text-xl font-semibold text-gray-900 tracking-tight group-hover:text-blue-600 transition-colors duration-200">
                 {title}
               </h1>
@@ -119,15 +126,15 @@ export function Navigation({
 
           {/* Center Section - Navigation (Desktop) */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200 flex items-center space-x-2"
             >
               <Home className="w-4 h-4" />
               <span>Home</span>
             </Link>
-            <Link 
-              href="/about" 
+            <Link
+              href="/about"
               className="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200 flex items-center space-x-2"
             >
               <Info className="w-4 h-4" />
@@ -152,11 +159,13 @@ export function Navigation({
                   <span className="text-sm font-medium sm:hidden">
                     {currentLanguage.flag}
                   </span>
-                  <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${
-                    isLanguageOpen ? "rotate-180" : ""
-                  }`} />
+                  <ChevronDown
+                    className={`w-3 h-3 transition-transform duration-200 ${
+                      isLanguageOpen ? "rotate-180" : ""
+                    }`}
+                  />
                 </button>
-                
+
                 {isLanguageOpen && (
                   <div className="absolute right-0 mt-2 w-48 rounded-xl overflow-hidden bg-white/95 backdrop-blur-sm border border-gray-200/50 shadow-lg shadow-gray-200/50">
                     <div className="p-1">
@@ -203,16 +212,16 @@ export function Navigation({
         {isMobileMenuOpen && (
           <div className="md:hidden border-t border-gray-200/50 bg-white/95 backdrop-blur-sm">
             <nav className="px-4 py-4 space-y-2">
-              <Link 
-                href="/" 
+              <Link
+                href="/"
                 className="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <Home className="w-4 h-4" />
                 <span className="font-medium">Home</span>
               </Link>
-              <Link 
-                href="/about" 
+              <Link
+                href="/about"
                 className="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
@@ -225,4 +234,4 @@ export function Navigation({
       </div>
     </header>
   );
-} 
+}

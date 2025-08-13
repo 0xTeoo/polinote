@@ -37,7 +37,7 @@ export class VideoService {
     const { page, limit, skip } = getPaginationParams(paginationQueryDto);
 
     const [items, totalItems] = await this.videoRepository.findAndCount({
-      order: { createdAt: 'ASC' },
+      order: { publishedAt: 'DESC' },
       take: limit,
       skip: skip,
     });

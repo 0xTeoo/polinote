@@ -1,6 +1,52 @@
 {
   "main": {
     "title": "Politics, Simplified.",
-    "description": "AI-powered analysis of political videos for concise summaries and actionable insights"
+    "description": "AI-powered analysis of political videos for concise summaries and actionable insights",
+    "badge": {
+      "title": "Automatically updated with latest videos"
+    }
+  },
+  "about": {
+    "hero": {
+      "title": "About Polinote",
+      "description": "Transforming hours of video into actionable insights through intelligent AI analysis."
+    },
+    "service": {
+      "title": "What is Polinote?",
+      "description": "Polinote is an AI-powered platform that transforms lengthy video content from influential channels into comprehensive, structured analysis. We focus on political briefings, educational content, and news coverage to help you stay informed without spending hours watching videos.",
+      "features": {
+        "smartAnalysis": {
+          "title": "Smart Analysis",
+          "description": "Our AI identifies key stakeholders, policy implications, and economic impacts from video content with structured markdown formatting."
+        },
+        "instantInsights": {
+          "title": "Instant Insights",
+          "description": "Get executive summaries, scenario analysis, and actionable recommendations in minutes with clear section organization."
+        }
+      }
+    },
+    "problems": {
+      "title": "Problems We Solve",
+      "timeConstraints": {
+        "title": "Time Constraints",
+        "problem": "Professionals, researchers, and informed citizens want to stay updated on important political and educational content, but don't have hours to watch lengthy videos.",
+        "solution": "We distill 45-minute press briefings into 5-minute comprehensive summaries with structured markdown sections including key points, stakeholders, and future scenarios."
+      },
+      "informationOverload": {
+        "title": "Information Overload",
+        "problem": "Raw video content lacks structure, making it difficult to identify key stakeholders, understand policy implications, or assess economic impacts.",
+        "solution": "We provide structured analysis with clear markdown sections for stakeholders, policy implications, economic impact, and future scenarios with highlighted key points."
+      },
+      "contextGap": {
+        "title": "Context Gap",
+        "problem": "Understanding the broader implications of political announcements or policy changes requires deep domain knowledge that many viewers lack.",
+        "solution": "We provide historical context, identify all relevant stakeholders, and explain potential scenarios in accessible language with structured markdown formatting."
+      }
+    },
+    "cta": {
+      "title": "Ready to get started?",
+      "description": "Explore our curated channels and discover how Polinote can save you time while keeping you informed.",
+      "button": "Browse Channels"
+    }
   }
 }

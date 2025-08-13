@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { VideoColumn } from "@/components/video-column";
 import { ContentTabs } from "@/components/content-tabs";
 import { ContentPanel } from "@/components/content-panel";
 import { SummaryDTO, TranscriptSegmentDTO } from "@polinote/schemas";
+import { VideoPlayer } from "./video-player";
 
 interface VideoDetailProps {
   videoId: string;
@@ -23,7 +23,7 @@ export function VideoDetail({
     <div className="lg:grid lg:grid-cols-12 lg:gap-8">
       {/* Left column - Video and Tabs */}
       <div className="lg:col-span-5 xl:col-span-5 space-y-6">
-        <VideoColumn videoId={videoId} />
+        <VideoPlayer videoId={videoId} />
         <ContentTabs activeTab={activeTab} onTabChange={setActiveTab} />
       </div>
 

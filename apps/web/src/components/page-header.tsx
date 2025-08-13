@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 interface PageHeaderProps {
   title: string;
   description: string;
-  badgeTitle: string;
+  badgeTitle?: string;
 }
 
 export function PageHeader({

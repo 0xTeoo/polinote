@@ -56,7 +56,7 @@ It combines **scalable cloud architecture**, **event-driven processing**, and **
 ---
 
 ## 🗄️ Database Model
-![Database ERD](https://private-user-images.githubusercontent.com/76833627/469805701-ed3f0a4b-c40b-4eea-a589-79dc50c2f1e5.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTQ4MTcwMTQsIm5iZiI6MTc1NDgxNjcxNCwicGF0aCI6Ii83NjgzMzYyNy80Njk4MDU3MDEtZWQzZjBhNGItYzQwYi00ZWVhLWE1ODktNzlkYzUwYzJmMWU1LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA4MTAlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwODEwVDA5MDUxNFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTRlZjlkN2U3ZDE4OGUxZmVmYmFkYTczYWNmMDViZTMzNDUxNDY3YzVkYWZmNGJiNmEyZjVjMDVkMjc4MWNhMDUmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.y3gkOF4snc3OYmIUuBYV1qW_nWh0JgPYNMEtcAXCZMA)  
+![Database ERD](https://cdn.thepolinote.com/erd.png)  
 *Video → Transcript → Segments → Summaries*
 
 - **Videos:** Metadata + processing state

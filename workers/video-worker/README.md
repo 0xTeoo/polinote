@@ -1,6 +1,6 @@
 # Video Worker
 
-A BullMQ worker for processing YouTube videos. This worker downloads audio from YouTube videos, transcribes them using OpenAI Whisper, and summarizes the content using OpenAI GPT-4.
+A BullMQ worker for processing YouTube videos. This worker downloads audio from YouTube videos, transcribes them using OpenAI Whisper, and generates Executive Briefings using OpenAI chat completions (model: gpt-5).
 
 ## 🏗️ Architecture
 
@@ -20,8 +20,8 @@ src/
 │   └── storage-processor.ts   # File storage operations
 ├── lib/                     # External service clients
 │   ├── media-tools.client.ts # FFmpeg/FFprobe/yt-dlp integration
-│   ├── youtube.client.ts    # YouTube API client
-│   └── openai.client.ts     # OpenAI API client
+│   ├── youtube.client.ts    # YouTube API client (YouTube Data API v3)
+│   └── openai/              # OpenAI client + language configs
 ├── types/                   # TypeScript type definitions
 ├── constants/               # Configuration constants
 ├── utils/                   # Utility functions
@@ -52,7 +52,7 @@ VideoProcessorChain (Orchestrator)
 
 - Downloads audio from YouTube videos using `yt-dlp`
 - Transcribes audio using OpenAI Whisper API
-- Summarizes transcripts using OpenAI GPT-4
+- Generates bilingual Executive Briefings (KO/EN) via OpenAI chat completions
 - Processes jobs via BullMQ queue
 - Supports Redis for job queue management
 - OOP architecture with clear separation of concerns
@@ -61,11 +61,12 @@ VideoProcessorChain (Orchestrator)
 
 ## 📋 Prerequisites
 
-- Node.js 18+
+- Node.js 20+
 - Redis server
 - `yt-dlp` installed on the system
-- `ffmpeg` installed on the system
+- `ffmpeg`/`ffprobe` installed on the system
 - OpenAI API key
+- YouTube Data API v3 key
 
 ## 🚀 Installation & Setup
 
@@ -84,17 +85,18 @@ Configure environment variables in `.env`:
 # OpenAI Configuration
 OPENAI_API_KEY=your_openai_api_key_here
 
+# YouTube API
+YOUTUBE_API_KEY=your_youtube_api_key_here
+
 # Redis Configuration
 REDIS_HOST=localhost
 REDIS_PORT=6379
 REDIS_PASSWORD=
 REDIS_DB=0
 
-# Worker Configuration
-WORKER_CONCURRENCY=1
-
-# File Storage
-DOWNLOADS_DIR=./downloads
+# Notes
+# - Worker concurrency is currently fixed to 1 in code
+# - Files are stored under ./workspace (see constants)
 ```
 
 ### 3. Start Redis Server
@@ -128,10 +130,13 @@ pnpm test
 
 Each job processes a YouTube video through the following steps:
 
-1. **Audio Processing**: Downloads audio using `yt-dlp` and processes with `ffmpeg`
-2. **Transcription**: Uses OpenAI Whisper API to transcribe the audio
-3. **Summarization**: Uses OpenAI GPT-4 to create summaries in Korean and English
-4. **Storage**: Saves results to the file system
+1. **Audio Processing**: Downloads audio using `yt-dlp` and processes/splits with `ffmpeg`
+2. **Transcription**: Uses OpenAI Whisper (`whisper-1`) to transcribe the audio (supports segment timestamps)
+3. **Summarization**: Uses OpenAI chat completions to produce Korean and English Executive Briefings
+4. **Metadata**: Fetches YouTube video metadata via YouTube Data API v3
+5. **Storage**: Saves results under `./workspace/data/<videoId>/`
+
+If both audio and result files already exist for a given `videoId`, the worker returns the cached result without reprocessing.
 
 ## 📊 Job Payload & Result
 
@@ -149,8 +154,8 @@ Each job processes a YouTube video through the following steps:
   metadata: {
     title: string;
     description: string;
-    published_at: Date;
-    thumbnail_url: string;
+    publishedAt: Date;
+    thumbnailUrl: string;
   };
   rawTranscript: string;
   transcriptSegments: Array<{
@@ -159,13 +164,8 @@ Each job processes a YouTube video through the following steps:
     text: string;
   }>;
   summaries: Array<{
-    overview: string;
-    keySections: {
-      introduction: string;
-      mainPoints: string[];
-      conclusion: string;
-    };
-    analysis: string;
+    language: 'KO' | 'EN';
+    content: string; // Markdown Executive Briefing
   }>;
 }
 ```
@@ -176,7 +176,7 @@ Each job processes a YouTube video through the following steps:
 Each processor handles one specific concern:
 - **AudioProcessor**: Downloads and processes audio files
 - **TranscribeProcessor**: Handles audio transcription
-- **SummarizeProcessor**: Generates text summaries
+- **SummarizeProcessor**: Generates Executive Briefings (KO/EN)
 - **StorageProcessor**: Manages file storage operations
 
 ### 2. **Open/Closed Principle**
@@ -237,9 +237,17 @@ export class CustomProcessor extends BaseProcessor<CustomInput, CustomOutput> {
 
 The worker listens to the `video` queue and processes jobs with the following configuration:
 
-- **Concurrency**: Configurable via `WORKER_CONCURRENCY` (default: 1)
-- **Retries**: 3 attempts with exponential backoff
+- **Concurrency**: Fixed to 1
 - **Graceful Shutdown**: Handles SIGTERM and SIGINT signals
+- Note: Retry/backoff is controlled by the job producer, not the worker
+
+## 🗂️ Storage Layout
+
+- Base directory: `./workspace/data`
+- Temp directory for downloads: `./workspace/temp`
+- Per-video directory: `./workspace/data/<videoId>/`
+  - `audio.mp3`
+  - `result.json`
 
 ## 🧪 Testing Strategy
 

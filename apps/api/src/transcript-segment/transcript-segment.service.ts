@@ -95,6 +95,7 @@ export class TranscriptSegmentService {
   async findByVideoId(videoId: string): Promise<TranscriptSegment[]> {
     return this.transcriptSegmentRepository.find({
       where: { transcript: { video: { id: videoId } } },
+      order: { start: 'ASC' },
     });
   }
 } 

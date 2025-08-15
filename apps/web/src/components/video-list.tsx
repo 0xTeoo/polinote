@@ -1,13 +1,13 @@
 "use client";
 
-import { BriefingCard } from "@/components/briefing-card";
 import { Pagination } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
 import { VideoDTO } from "@polinote/schemas";
 import { useRouter, useSearchParams } from "next/navigation";
+import { VideoCard } from "./video-card";
 
-interface BriefingListProps {
-  briefings: VideoDTO[];
+interface VideoListProps {
+  videos: VideoDTO[];
   pagination: {
     totalItems: number;
     totalPages: number;
@@ -16,7 +16,7 @@ interface BriefingListProps {
   };
 }
 
-export function BriefingList({ briefings, pagination }: BriefingListProps) {
+export function VideoList({ videos, pagination }: VideoListProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const page = searchParams.get("page") || "1";
@@ -32,16 +32,16 @@ export function BriefingList({ briefings, pagination }: BriefingListProps) {
           "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         )}
       >
-        {briefings.map((briefing, index) => (
+        {videos.map((video, index) => (
           <li
-            key={briefing.id}
+            key={video.id}
             className="opacity-0 animate-fade-slide-up"
             style={{
               animationDelay: `${index * 100}ms`,
               animationFillMode: "forwards",
             }}
           >
-            <BriefingCard key={briefing.id} briefing={briefing} index={index} />
+            <VideoCard key={video.id} video={video} index={index} />
           </li>
         ))}
       </ul>
@@ -51,7 +51,7 @@ export function BriefingList({ briefings, pagination }: BriefingListProps) {
           <div className="text-sm text-neutral-500">
             Showing {pagination.currentPage}-
             {Math.min(pagination.currentPage + 1, pagination.totalPages)} of{" "}
-            {briefings.length} briefings
+            {videos.length} videos
           </div>
           <Pagination
             currentPage={parseInt(page)}

@@ -35,9 +35,6 @@ export class VideoQueueEventListner implements OnModuleInit {
 
     // @TODO: Save the job result to the database
     this.queueEvents.on('completed', async (args: { jobId: string; returnvalue: string; prev?: string | undefined; }, id: string) => {
-      console.log('Job completed', args.jobId);
-      console.log('Result', args.returnvalue);
-
       const jobResult = args.returnvalue as unknown as VideoJobResult;
 
       // Convert the publishedAt string back to a Date object

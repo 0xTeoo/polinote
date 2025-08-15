@@ -44,6 +44,7 @@ export function VideoPlayer({ videoId }: VideoPlayerProps) {
                   }`}
                   width={100}
                   height={100}
+                  unoptimized
                 />
                 <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
                   <button

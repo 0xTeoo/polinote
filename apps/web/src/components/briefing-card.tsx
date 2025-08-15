@@ -33,13 +33,14 @@ export function BriefingCard({ briefing, index }: BriefingCardProps) {
         <Card className="h-full overflow-hidden flex flex-col rounded-2xl shadow-minimal hover:shadow-minimal-lg transition-all duration-500 ease-out border border-neutral-200/50 bg-white/80 backdrop-blur-sm">
           <div className="relative aspect-video overflow-hidden">
             <Image
+              key={briefing.youtubeVideoId}
               src={briefing.thumbnailUrl || "/placeholder.svg"}
               alt={`Thumbnail for ${briefing.title}`}
-              fill
               className={`object-cover transition-transform duration-700 ease-out ${
                 isHovered ? "scale-105" : "scale-100"
               }`}
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              fill
+              unoptimized
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end">
               <div

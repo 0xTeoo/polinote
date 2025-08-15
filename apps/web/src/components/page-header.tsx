@@ -14,18 +14,8 @@ export function PageHeader({
   description,
   badgeTitle,
 }: PageHeaderProps) {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
-
   return (
-    <div
-      className={`flex flex-col items-center justify-center gap-4 text-center transition-all duration-700 ease-out ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-      }`}
-    >
+    <div className="flex flex-col items-center justify-center gap-4 text-center">
       <h1 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-4 tracking-tight">
         {title}
       </h1>

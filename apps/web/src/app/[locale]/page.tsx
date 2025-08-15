@@ -1,6 +1,6 @@
 import { getVideos } from "@/actions/get-videos";
-import { BriefingList } from "@/components/briefing-list";
 import { PageHeader } from "@/components/page-header";
+import { VideoList } from "@/components/video-list";
 import { getTranslations } from "next-intl/server";
 
 export default async function HomePage({
@@ -26,7 +26,7 @@ export default async function HomePage({
               description={t("main.description")}
               badgeTitle={t("main.badge.title")}
             />
-            <BriefingList briefings={videos} pagination={pagination} />
+            <VideoList videos={videos} pagination={pagination} />
           </div>
         </div>
       </main>

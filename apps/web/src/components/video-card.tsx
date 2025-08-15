@@ -8,22 +8,22 @@ import { CalendarDays, ArrowRight } from "lucide-react";
 import { VideoDTO } from "@polinote/schemas";
 import { format } from "date-fns-tz";
 
-interface BriefingCardProps {
-  briefing: VideoDTO;
+interface VideoCardProps {
+  video: VideoDTO;
   index: number;
 }
 
-export function BriefingCard({ briefing, index }: BriefingCardProps) {
+export function VideoCard({ video, index }: VideoCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [formattedDate, setFormattedDate] = useState<string>("");
 
   useEffect(() => {
     // Format date only on client side to prevent hydration mismatch
-    setFormattedDate(format(new Date(briefing.publishedAt), "MMM d, yyyy"));
-  }, [briefing.publishedAt]);
+    setFormattedDate(format(new Date(video.publishedAt), "MMM d, yyyy"));
+  }, [video.publishedAt]);
 
   return (
-    <Link href={`/videos/${briefing.id}`} className="block h-full">
+    <Link href={`/videos/${video.id}`} className="block h-full">
       <div
         className={`h-full animate-fade-in`}
         style={{ animationDelay: `${index * 0.1}s` }}
@@ -33,14 +33,14 @@ export function BriefingCard({ briefing, index }: BriefingCardProps) {
         <Card className="h-full overflow-hidden flex flex-col rounded-2xl shadow-minimal hover:shadow-minimal-lg transition-all duration-500 ease-out border border-neutral-200/50 bg-white/80 backdrop-blur-sm">
           <div className="relative aspect-video overflow-hidden">
             <Image
-              key={briefing.youtubeVideoId}
-              src={briefing.thumbnailUrl || "/placeholder.svg"}
-              alt={`Thumbnail for ${briefing.title}`}
+              src={video.thumbnailUrl || "/placeholder.svg"}
+              alt={`Thumbnail for ${video.title}`}
+              fill
               className={`object-cover transition-transform duration-700 ease-out ${
                 isHovered ? "scale-105" : "scale-100"
               }`}
-              fill
-              unoptimized
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              key={video.youtubeVideoId}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end">
               <div
@@ -55,15 +55,15 @@ export function BriefingCard({ briefing, index }: BriefingCardProps) {
           <CardContent className="flex-grow pt-5">
             <div className="flex items-center text-sm text-neutral-500 mb-3">
               <CalendarDays className="h-4 w-4 mr-2" />
-              <time dateTime={briefing.publishedAt}>
+              <time dateTime={video.publishedAt}>
                 {formattedDate}
               </time>
             </div>
             <h2 className="font-semibold text-neutral-900 mb-3 line-clamp-2 text-lg">
-              {briefing.title}
+              {video.title}
             </h2>
             <p className="text-sm text-neutral-600 line-clamp-2 leading-relaxed">
-              {briefing.description}
+              {video.description}
             </p>
           </CardContent>
           <CardFooter className="pt-0 pb-5">
@@ -72,7 +72,7 @@ export function BriefingCard({ briefing, index }: BriefingCardProps) {
                 isHovered ? "text-blue-600 gap-2" : "text-neutral-500"
               }`}
             >
-              View briefing details
+              View details
               <ArrowRight
                 className={`h-3.5 w-3.5 transition-all duration-300 ease-out ${
                   isHovered ? "translate-x-1 opacity-100" : "opacity-0"

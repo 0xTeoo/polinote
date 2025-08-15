@@ -1,7 +1,6 @@
 "use client";
 
 import { RefreshCw } from "lucide-react";
-import { useState, useEffect } from "react";
 
 interface PageHeaderProps {
   title: string;

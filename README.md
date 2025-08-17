@@ -1,6 +1,6 @@
 # 🎯 Polinote  
 > **From YouTube to Insights — Automated, AI-powered Video Processing Platform**  
-> A production-ready, microservices-based system for ingesting YouTube videos, transcribing audio, and generating AI summaries in real time.
+> AI-powered, end-to-end system for ingesting YouTube videos, transcribing audio, and generating summaries.
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-blue.svg)](https://www.typescriptlang.org/)
 [![NestJS](https://img.shields.io/badge/NestJS-11.0+-red.svg)](https://nestjs.com/)

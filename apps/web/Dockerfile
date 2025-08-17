@@ -14,6 +14,10 @@ FROM corepack AS deps
 COPY package.json pnpm-*.yaml ./
 COPY . .
 
+# Add client side environment variables to the build stage
+ARG NEXT_PUBLIC_GA_ID
+ENV NEXT_PUBLIC_GA_ID=${NEXT_PUBLIC_GA_ID}
+
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 RUN pnpm --filter web build

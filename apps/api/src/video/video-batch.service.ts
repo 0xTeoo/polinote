@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { google } from 'googleapis';
 import { VideoQueueService } from './video-queue.service';
+import { VideoService } from './video.service';
 
 const youtube = google.youtube('v3');
 const WHITEHOUSE_CHANNEL_ID = 'UCYxRlFDqcWM4y7FfpiAN3KQ'; // @WhiteHouse channel ID
@@ -10,7 +11,10 @@ const WHITEHOUSE_CHANNEL_ID = 'UCYxRlFDqcWM4y7FfpiAN3KQ'; // @WhiteHouse channel
 export class VideoBatchService {
   private readonly logger = new Logger(VideoBatchService.name);
 
-  constructor(private readonly videoQueueService: VideoQueueService) { }
+  constructor(
+    private readonly videoQueueService: VideoQueueService,
+    private readonly videoService: VideoService
+  ) { }
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async crawlLatestBriefingVideo() {
@@ -37,12 +41,18 @@ export class VideoBatchService {
         return;
       }
 
-      const youtubeUrl = `https://www.youtube.com/watch?v=${latestBriefing.id.videoId}`;
+      // 3. Check if the video already exists
+      const existingVideo = await this.videoService.findByYoutubeId(latestBriefing.id.videoId);
 
-      // 3. Add job to the video queue
-      this.videoQueueService.addJob(youtubeUrl);
+      if (existingVideo) {
+        this.logger.warn('Video already exists, skipping...');
+        return;
+      }
 
-      this.logger.log(`Successfully added job to the video queue: ${youtubeUrl}`);
+      // 4. Add job to the video queue
+      this.videoQueueService.addJob(`https://www.youtube.com/watch?v=${latestBriefing.id.videoId}`);
+
+      this.logger.log(`Successfully added job to the video queue: ${latestBriefing.id.videoId}`);
     } catch (error) {
       this.logger.error('Failed to crawl latest briefing video:', error);
       throw error;

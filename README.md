@@ -44,7 +44,7 @@ It combines **scalable cloud architecture**, **event-driven processing**, and **
 ---
 
 ## 🏗️ Architecture
-![AWS Architecture Diagram](https://private-user-images.githubusercontent.com/76833627/469801169-27d93b2d-1fe3-47f8-9921-563765b0c46e.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTQ4MTcwMTQsIm5iZiI6MTc1NDgxNjcxNCwicGF0aCI6Ii83NjgzMzYyNy80Njk4MDExNjktMjdkOTNiMmQtMWZlMy00N2Y4LTk5MjEtNTYzNzY1YjBjNDZlLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA4MTAlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwODEwVDA5MDUxNFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWJlNTBlYjMwYzdkODI2YjI1OWZhNDIwZTc1YmFjNzgzMzE2ZjZhZTVkZWQ4Mjg5N2FiOWY2OTM5Mzg0NTc4MjgmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.1FnBJ34rowXoTuEDKIUE6Ic40ZqrP_j2UHX6CQkH7og)  
+![AWS Architecture Diagram](https://cdn.thepolinote.com/aws-infrastructure.png)  
 *Multi-AZ AWS architecture with on-premise worker integration.*
 
 **Highlights:**
